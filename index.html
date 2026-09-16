@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>سِمة | صمّمها بطريقتك</title>
+
+    <meta
+        name="description"
+        content="سِمة - صمّم ملابسك، اكتشف التصاميم، وشارك إبداعك."
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <a href="#" class="logo" onclick="showPage('home')">
+                سِمة
+            </a>
+
+            <nav class="navigation">
+
+                <button onclick="showPage('home')">
+                    الرئيسية
+                </button>
+
+                <button onclick="showPage('shop')">
+                    المتجر
+                </button>
+
+                <button onclick="showPage('designer')">
+                    صمّم الآن
+                </button>
+
+                <button onclick="showPage('about')">
+                    عن سِمة
+                </button>
+
+            </nav>
+
+            <div class="header-actions">
+
+                <button
+                    class="icon-button"
+                    onclick="showPage('cart')"
+                    aria-label="السلة"
+                >
+                    🛒
+                    <span id="cart-count">0</span>
+                </button>
+
+                <button
+                    class="login-button"
+                    onclick="showPage('account')"
+                >
+                    حسابي
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main id="app">
+
+
+        <!-- ================= HOME ================= -->
+
+        <section id="home-page" class="page active">
+
+            <div class="hero">
+
+                <div class="hero-content">
+
+                    <span class="hero-label">
+                        أهلاً بك في سِمة
+                    </span>
+
+                    <h1>
+                        صمّمها بطريقتك
+                    </h1>
+
+                    <p>
+                        حوّل فكرتك إلى تصميمك الخاص،
+                        واكتشف تصاميم صنعت لتناسب لحظتك.
+                    </p>
+
+                    <div class="hero-buttons">
+
+                        <button
+                            class="primary-button"
+                            onclick="showPage('designer')"
+                        >
+                            صمّم الآن
+                        </button>
+
+                        <button
+                            class="secondary-button"
+                            onclick="showPage('shop')"
+                        >
+                            استكشف التصاميم
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="hero-preview">
+
+                    <div class="shirt-card">
+
+                        <div class="shirt">
+                            <span>سِمة</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CATEGORIES -->
+
+            <section class="section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            اكتشف
+                        </span>
+
+                        <h2>
+                            اختر ما يناسبك
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="category-grid">
+
+                    <button
+                        class="category-card"
+                        onclick="openCategory('تيشيرتات')"
+                    >
+                        <span class="category-icon">
+                            👕
+                        </span>
+
+                        <strong>
+                            تيشيرتات
+                        </strong>
+
+                        <small>
+                            تصاميمك على تيشيرتك
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        class="category-card"
+                        onclick="openCategory('تخرج')"
+                    >
+                        <span class="category-icon">
+                            🎓
+                        </span>
+
+                        <strong>
+                            تخرج
+                        </strong>
+
+                        <small>
+                            لحظات تستحق تصميم
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        class="category-card"
+                        onclick="openCategory('مناسبات')"
+                    >
+                        <span class="category-icon">
+                            🎉
+                        </span>
+
+                        <strong>
+                            مناسبات
+                        </strong>
+
+                        <small>
+                            أعياد ومناسبات خاصة
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        class="category-card"
+                        onclick="openCategory('مجموعات')"
+                    >
+                        <span class="category-icon">
+                            👥
+                        </span>
+
+                        <strong>
+                            مجموعات
+                        </strong>
+
+                        <small>
+                            صمّم لمجموعتك
+                        </small>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- FEATURED -->
+
+            <section class="section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            مختارات سِمة
+                        </span>
+
+                        <h2>
+                            تصاميم مميزة
+                        </h2>
+                    </div>
+
+                    <button
+                        class="text-button"
+                        onclick="showPage('shop')"
+                    >
+                        عرض الكل
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="featured-products"
+                    class="product-grid"
+                >
+
+                    <!-- Products generated by app.js -->
+
+                </div>
+
+            </section>
+
+
+            <!-- CTA -->
+
+            <section class="designer-cta">
+
+                <div>
+
+                    <span class="section-label">
+                        فكرتك تبدأ هنا
+                    </span>
+
+                    <h2>
+                        عندك تصميم في بالك؟
+                    </h2>
+
+                    <p>
+                        صمّم منتجك بنفسك واخليه يعبر عنك.
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-button"
+                    onclick="showPage('designer')"
+                >
+                    ابدأ التصميم
+                </button>
+
+            </section>
+
+        </section>
+
+
+        <!-- ================= SHOP ================= -->
+
+        <section id="shop-page" class="page">
+
+            <div class="page-header">
+
+                <span class="section-label">
+                    متجر سِمة
+                </span>
+
+                <h1>
+                    اكتشف التصاميم
+                </h1>
+
+                <p>
+                    اختر التصميم الذي يناسبك.
+                </p>
+
+            </div>
+
+
+            <div class="shop-toolbar">
+
+                <input
+                    id="search-input"
+                    type="search"
+                    placeholder="ابحث عن تصميم..."
+                    oninput="searchProducts()"
+                >
+
+                <select
+                    id="category-filter"
+                    onchange="filterProducts()"
+                >
+
+                    <option value="all">
+                        جميع التصاميم
+                    </option>
+
+                    <option value="تيشيرتات">
+                        تيشيرتات
+                    </option>
+
+                    <option value="تخرج">
+                        تخرج
+                    </option>
+
+                    <option value="مناسبات">
+                        مناسبات
+                    </option>
+
+                    <option value="مجموعات">
+                        مجموعات
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div
+                id="shop-products"
+                class="product-grid"
+            >
+
+                <!-- Products generated by app.js -->
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= DESIGNER ================= -->
+
+        <section id="designer-page" class="page">
+
+            <div class="page-header">
+
+                <span class="section-label">
+                    المصمم
+                </span>
+
+                <h1>
+                    صمّم منتجك
+                </h1>
+
+                <p>
+                    ابدأ تصميمك واختر التفاصيل التي تناسبك.
+                </p>
+
+            </div>
+
+
+            <div class="designer-layout">
+
+
+                <div class="designer-preview">
+
+                    <div
+                        id="design-shirt"
+                        class="designer-shirt"
+                    >
+
+                        <span id="shirt-text">
+                            سِمة
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="designer-controls">
+
+                    <div class="control-group">
+
+                        <label>
+                            نوع المنتج
+                        </label>
+
+                        <select id="product-type">
+
+                            <option value="تيشيرت">
+                                تيشيرت
+                            </option>
+
+                            <option value="هودي">
+                                هودي
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="control-group">
+
+                        <label>
+                            لون المنتج
+                        </label>
+
+                        <div class="color-options">
+
+                            <button
+                                class="color-option white"
+                                onclick="changeShirtColor('#f5f5f5')"
+                                aria-label="أبيض"
+                            ></button>
+
+                            <button
+                                class="color-option black"
+                                onclick="changeShirtColor('#151515')"
+                                aria-label="أسود"
+                            ></button>
+
+                            <button
+                                class="color-option gray"
+                                onclick="changeShirtColor('#777')"
+                                aria-label="رمادي"
+                            ></button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="control-group">
+
+                        <label for="custom-text">
+                            النص
+                        </label>
+
+                        <input
+                            id="custom-text"
+                            type="text"
+                            maxlength="30"
+                            placeholder="اكتب النص..."
+                            oninput="updateDesignText(this.value)"
+                        >
+
+                    </div>
+
+
+                    <div class="control-group">
+
+                        <label for="size-select">
+                            المقاس
+                        </label>
+
+                        <select id="size-select">
+
+                            <option value="S">
+                                S
+                            </option>
+
+                            <option value="M" selected>
+                                M
+                            </option>
+
+                            <option value="L">
+                                L
+                            </option>
+
+                            <option value="XL">
+                                XL
+                            </option>
+
+                            <option value="XXL">
+                                XXL
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-button"
+                        onclick="addCustomDesignToCart()"
+                    >
+                        أضف للسلة
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PRODUCT ================= -->
+
+        <section id="product-page" class="page">
+
+            <button
+                class="back-button"
+                onclick="showPage('shop')"
+            >
+                ← العودة للمتجر
+            </button>
+
+            <div id="product-details">
+
+                <!-- Product generated by app.js -->
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CART ================= -->
+
+        <section id="cart-page" class="page">
+
+            <div class="page-header">
+
+                <span class="section-label">
+                    طلبك
+                </span>
+
+                <h1>
+                    سلة المشتريات
+                </h1>
+
+            </div>
+
+
+            <div class="cart-layout">
+
+                <div
+                    id="cart-items"
+                    class="cart-items"
+                >
+
+                    <!-- Cart generated by app.js -->
+
+                </div>
+
+
+                <aside class="cart-summary">
+
+                    <h3>
+                        ملخص الطلب
+                    </h3>
+
+                    <div class="summary-row">
+
+                        <span>
+                            المنتجات
+                        </span>
+
+                        <strong id="cart-subtotal">
+                            0 ر.س
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            الشحن
+                        </span>
+
+                        <strong>
+                            يحسب لاحقًا
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-total">
+
+                        <span>
+                            الإجمالي
+                        </span>
+
+                        <strong id="cart-total">
+                            0 ر.س
+                        </strong>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-button"
+                        onclick="goToCheckout()"
+                    >
+                        إتمام الطلب
+                    </button>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CHECKOUT ================= -->
+
+        <section id="checkout-page" class="page">
+
+            <div class="page-header">
+
+                <span class="section-label">
+                    إتمام الطلب
+                </span>
+
+                <h1>
+                    بيانات الطلب
+                </h1>
+
+                <p>
+                    الدفع الإلكتروني سيتم ربطه عبر Paylink في المرحلة التالية.
+                </p>
+
+            </div>
+
+
+            <div class="checkout-layout">
+
+                <form
+                    id="checkout-form"
+                    class="checkout-form"
+                    onsubmit="submitOrder(event)"
+                >
+
+                    <div class="control-group">
+
+                        <label for="customer-name">
+                            الاسم
+                        </label>
+
+                        <input
+                            id="customer-name"
+                            type="text"
+                            required
+                            placeholder="الاسم الكامل"
+                        >
+
+                    </div>
+
+
+                    <div class="control-group">
+
+                        <label for="customer-phone">
+                            رقم الجوال
+                        </label>
+
+                        <input
+                            id="customer-phone"
+                            type="tel"
+                            required
+                            placeholder="05xxxxxxxx"
+                        >
+
+                    </div>
+
+
+                    <div class="control-group">
+
+                        <label for="customer-city">
+                            المدينة
+                        </label>
+
+                        <input
+                            id="customer-city"
+                            type="text"
+                            required
+                            placeholder="الرياض"
+                        >
+
+                    </div>
+
+
+                    <div class="control-group">
+
+                        <label for="customer-address">
+                            العنوان
+                        </label>
+
+                        <textarea
+                            id="customer-address"
+                            required
+                            placeholder="العنوان بالتفصيل"
+                        ></textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="primary-button full-button"
+                    >
+                        الانتقال للدفع
+                    </button>
+
+                </form>
+
+
+                <aside class="checkout-summary">
+
+                    <h3>
+                        ملخص الطلب
+                    </h3>
+
+                    <div
+                        id="checkout-items"
+                    ></div>
+
+                    <div class="summary-total">
+
+                        <span>
+                            الإجمالي
+                        </span>
+
+                        <strong id="checkout-total">
+                            0 ر.س
+                        </strong>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ACCOUNT ================= -->
+
+        <section id="account-page" class="page">
+
+            <div class="account-box">
+
+                <span class="section-label">
+                    سِمة
+                </span>
+
+                <h1>
+                    حسابك
+                </h1>
+
+                <p>
+                    تسجيل الدخول وإدارة الطلبات ستكون متاحة في المرحلة القادمة.
+                </p>
+
+                <button
+                    class="primary-button"
+                    onclick="showPage('home')"
+                >
+                    العودة للرئيسية
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ABOUT ================= -->
+
+        <section id="about-page" class="page">
+
+            <div class="about-content">
+
+                <span class="section-label">
+                    من نحن
+                </span>
+
+                <h1>
+                    سِمة
+                </h1>
+
+                <p>
+                    سِمة منصة تتيح لك اكتشاف التصاميم وصناعة
+                    منتج يعبر عن فكرتك ومناسبتك.
+                </p>
+
+                <p>
+                    هدفنا أن نجعل تصميم الملابس أسهل وأقرب
+                    للجميع، سواء كنت تصمم لنفسك أو لمجموعتك.
+                </p>
+
+                <button
+                    class="primary-button"
+                    onclick="showPage('designer')"
+                >
+                    صمّم الآن
+                </button>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <div>
+
+                <div class="footer-logo">
+                    سِمة
+                </div>
+
+                <p>
+                    صمّمها بطريقتك.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <button onclick="showPage('shop')">
+                    المتجر
+                </button>
+
+                <button onclick="showPage('designer')">
+                    صمّم الآن
+                </button>
+
+                <button onclick="showPage('about')">
+                    عن سِمة
+                </button>
+
+            </div>
+
+
+            <div class="footer-copy">
+
+                © 2026 سِمة
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ================= SCRIPT ================= -->
+
+    <script src="app.js"></script>
+
+</body>
+</html>
