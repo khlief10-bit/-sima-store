@@ -1,896 +1,3142 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
 
-    <title>سِمة | صمّمها بطريقتك</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+  >
 
-    <meta
-        name="description"
-        content="سِمة - صمّم ملابسك، اكتشف التصاميم، وشارك إبداعك."
-    >
+  <meta
+    name="description"
+    content="سِمة — صمّم ملابسك بطريقتك، اطلب تصميمك أو شاركه مع مجتمع سِمة."
+  >
 
-    <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#111111">
+
+  <title>سِمة | صمّمها بطريقتك</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
+
 
 <body>
 
-    <!-- ================= HEADER ================= -->
+  <!-- =========================================================
+       LOADING SCREEN
+  ========================================================== -->
 
-    <header class="header">
+  <div id="loading-screen" class="loading-screen">
 
-        <div class="header-container">
+    <div class="loading-logo">
+      سِمة
+    </div>
 
-            <a href="#" class="logo" onclick="showPage('home')">
-                سِمة
-            </a>
+    <div class="loading-spinner"></div>
 
-            <nav class="navigation">
+    <p>
+      جاري تجهيز سِمة...
+    </p>
 
-                <button onclick="showPage('home')">
-                    الرئيسية
-                </button>
+  </div>
 
-                <button onclick="showPage('shop')">
-                    المتجر
-                </button>
 
-                <button onclick="showPage('designer')">
-                    صمّم الآن
-                </button>
+  <!-- =========================================================
+       TOAST
+  ========================================================== -->
 
-                <button onclick="showPage('about')">
-                    عن سِمة
-                </button>
+  <div
+    id="toast-container"
+    class="toast-container"
+  ></div>
 
-            </nav>
 
-            <div class="header-actions">
+  <!-- =========================================================
+       HEADER
+  ========================================================== -->
 
-                <button
-                    class="icon-button"
-                    onclick="showPage('cart')"
-                    aria-label="السلة"
-                >
-                    🛒
-                    <span id="cart-count">0</span>
-                </button>
+  <header class="site-header">
 
-                <button
-                    class="login-button"
-                    onclick="showPage('account')"
-                >
-                    حسابي
-                </button>
+    <div class="container header-inner">
+
+      <!-- Logo -->
+
+      <button
+        type="button"
+        class="brand"
+        onclick="showPage('home')"
+        aria-label="العودة للرئيسية"
+      >
+
+        <span class="brand-mark">
+          س
+        </span>
+
+        <span class="brand-text">
+
+          <strong>
+            سِمة
+          </strong>
+
+          <small>
+            صمّمها بطريقتك
+          </small>
+
+        </span>
+
+      </button>
+
+
+      <!-- Desktop Navigation -->
+
+      <nav
+        class="main-nav"
+        aria-label="القائمة الرئيسية"
+      >
+
+        <button
+          type="button"
+          class="nav-link active"
+          data-page="home"
+          onclick="showPage('home')"
+        >
+          الرئيسية
+        </button>
+
+
+        <button
+          type="button"
+          class="nav-link"
+          data-page="shop"
+          onclick="showPage('shop')"
+        >
+          المتجر
+        </button>
+
+
+        <button
+          type="button"
+          class="nav-link nav-design"
+          data-page="designer"
+          onclick="showPage('designer')"
+        >
+          <span>
+            ✦
+          </span>
+
+          صمّم الآن
+        </button>
+
+
+        <button
+          type="button"
+          class="nav-link"
+          data-page="about"
+          onclick="showPage('about')"
+        >
+          عن سِمة
+        </button>
+
+      </nav>
+
+
+      <!-- Header Actions -->
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="icon-button"
+          onclick="showPage('cart')"
+          aria-label="السلة"
+          title="السلة"
+        >
+
+          <span class="icon">
+            🛒
+          </span>
+
+          <span
+            id="cart-count"
+            class="cart-count"
+          >
+            0
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="account-button"
+          onclick="showPage('account')"
+        >
+
+          <span class="account-icon">
+            👤
+          </span>
+
+          <span>
+            حسابي
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="mobile-menu-button"
+          onclick="toggleMobileMenu()"
+          aria-label="فتح القائمة"
+        >
+          ☰
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- Mobile Menu -->
+
+    <div
+      id="mobile-menu"
+      class="mobile-menu"
+    >
+
+      <button
+        type="button"
+        onclick="showPage('home'); closeMobileMenu()"
+      >
+        الرئيسية
+      </button>
+
+
+      <button
+        type="button"
+        onclick="showPage('shop'); closeMobileMenu()"
+      >
+        المتجر
+      </button>
+
+
+      <button
+        type="button"
+        onclick="showPage('designer'); closeMobileMenu()"
+      >
+        ✦ صمّم الآن
+      </button>
+
+
+      <button
+        type="button"
+        onclick="showPage('account'); closeMobileMenu()"
+      >
+        حسابي
+      </button>
+
+
+      <button
+        type="button"
+        onclick="showPage('about'); closeMobileMenu()"
+      >
+        عن سِمة
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================================================
+       MAIN APP
+  ========================================================== -->
+
+  <main id="app">
+
+
+    <!-- =======================================================
+         HOME
+    ======================================================== -->
+
+    <section
+      id="home-page"
+      class="page active"
+      data-page-section="home"
+    >
+
+      <!-- HERO -->
+
+      <section class="hero-section">
+
+        <div class="container hero-grid">
+
+
+          <div class="hero-content">
+
+            <div class="eyebrow">
+
+              <span>
+                ✦
+              </span>
+
+              عالمك. تصميمك. سِمة.
 
             </div>
 
-        </div>
 
-    </header>
+            <h1>
+
+              صمّمها
+
+              <span>
+                بطريقتك
+              </span>
+
+            </h1>
 
 
-    <!-- ================= MAIN ================= -->
+            <p>
+              في سِمة، أنت المصمم.
+              اختر القطعة، أضف فكرتك،
+              صمّمها بطريقتك وخلي إبداعك يوصل لك أو لغيرك.
+            </p>
 
-    <main id="app">
+
+            <div class="hero-buttons">
+
+              <button
+                type="button"
+                class="primary-button large"
+                onclick="showPage('designer')"
+              >
+
+                <span>
+                  ✦
+                </span>
+
+                ابدأ التصميم
+
+              </button>
 
 
-        <!-- ================= HOME ================= -->
+              <button
+                type="button"
+                class="secondary-button large"
+                onclick="showPage('shop')"
+              >
 
-        <section id="home-page" class="page active">
+                استكشف المتجر
 
-            <div class="hero">
+                <span>
+                  ←
+                </span>
 
-                <div class="hero-content">
-
-                    <span class="hero-label">
-                        أهلاً بك في سِمة
-                    </span>
-
-                    <h1>
-                        صمّمها بطريقتك
-                    </h1>
-
-                    <p>
-                        حوّل فكرتك إلى تصميمك الخاص،
-                        واكتشف تصاميم صنعت لتناسب لحظتك.
-                    </p>
-
-                    <div class="hero-buttons">
-
-                        <button
-                            class="primary-button"
-                            onclick="showPage('designer')"
-                        >
-                            صمّم الآن
-                        </button>
-
-                        <button
-                            class="secondary-button"
-                            onclick="showPage('shop')"
-                        >
-                            استكشف التصاميم
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <div class="hero-preview">
-
-                    <div class="shirt-card">
-
-                        <div class="shirt">
-                            <span>سِمة</span>
-                        </div>
-
-                    </div>
-
-                </div>
+              </button>
 
             </div>
 
 
-            <!-- CATEGORIES -->
-
-            <section class="section">
-
-                <div class="section-heading">
-
-                    <div>
-                        <span class="section-label">
-                            اكتشف
-                        </span>
-
-                        <h2>
-                            اختر ما يناسبك
-                        </h2>
-                    </div>
-
-                </div>
+            <div class="hero-features">
 
 
-                <div class="category-grid">
+              <div class="hero-feature">
 
-                    <button
-                        class="category-card"
-                        onclick="openCategory('تيشيرتات')"
-                    >
-                        <span class="category-icon">
-                            👕
-                        </span>
-
-                        <strong>
-                            تيشيرتات
-                        </strong>
-
-                        <small>
-                            تصاميمك على تيشيرتك
-                        </small>
-
-                    </button>
-
-
-                    <button
-                        class="category-card"
-                        onclick="openCategory('تخرج')"
-                    >
-                        <span class="category-icon">
-                            🎓
-                        </span>
-
-                        <strong>
-                            تخرج
-                        </strong>
-
-                        <small>
-                            لحظات تستحق تصميم
-                        </small>
-
-                    </button>
-
-
-                    <button
-                        class="category-card"
-                        onclick="openCategory('مناسبات')"
-                    >
-                        <span class="category-icon">
-                            🎉
-                        </span>
-
-                        <strong>
-                            مناسبات
-                        </strong>
-
-                        <small>
-                            أعياد ومناسبات خاصة
-                        </small>
-
-                    </button>
-
-
-                    <button
-                        class="category-card"
-                        onclick="openCategory('مجموعات')"
-                    >
-                        <span class="category-icon">
-                            👥
-                        </span>
-
-                        <strong>
-                            مجموعات
-                        </strong>
-
-                        <small>
-                            صمّم لمجموعتك
-                        </small>
-
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- FEATURED -->
-
-            <section class="section">
-
-                <div class="section-heading">
-
-                    <div>
-                        <span class="section-label">
-                            مختارات سِمة
-                        </span>
-
-                        <h2>
-                            تصاميم مميزة
-                        </h2>
-                    </div>
-
-                    <button
-                        class="text-button"
-                        onclick="showPage('shop')"
-                    >
-                        عرض الكل
-                    </button>
-
-                </div>
-
-
-                <div
-                    id="featured-products"
-                    class="product-grid"
-                >
-
-                    <!-- Products generated by app.js -->
-
-                </div>
-
-            </section>
-
-
-            <!-- CTA -->
-
-            <section class="designer-cta">
+                <span class="feature-icon">
+                  ✦
+                </span>
 
                 <div>
 
-                    <span class="section-label">
-                        فكرتك تبدأ هنا
-                    </span>
+                  <strong>
+                    صمّم بنفسك
+                  </strong>
 
-                    <h2>
-                        عندك تصميم في بالك؟
-                    </h2>
-
-                    <p>
-                        صمّم منتجك بنفسك واخليه يعبر عنك.
-                    </p>
+                  <small>
+                    بدون تعقيد
+                  </small>
 
                 </div>
 
-                <button
-                    class="primary-button"
-                    onclick="showPage('designer')"
-                >
-                    ابدأ التصميم
-                </button>
-
-            </section>
-
-        </section>
+              </div>
 
 
-        <!-- ================= SHOP ================= -->
+              <div class="hero-feature">
 
-        <section id="shop-page" class="page">
-
-            <div class="page-header">
-
-                <span class="section-label">
-                    متجر سِمة
+                <span class="feature-icon">
+                  ✓
                 </span>
 
-                <h1>
-                    اكتشف التصاميم
-                </h1>
+                <div>
 
-                <p>
-                    اختر التصميم الذي يناسبك.
-                </p>
+                  <strong>
+                    اطلب تصميمك
+                  </strong>
+
+                  <small>
+                    بطريقة سهلة
+                  </small>
+
+                </div>
+
+              </div>
+
+
+              <div class="hero-feature">
+
+                <span class="feature-icon">
+                  ♢
+                </span>
+
+                <div>
+
+                  <strong>
+                    شارك إبداعك
+                  </strong>
+
+                  <small>
+                    مع مجتمع سِمة
+                  </small>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- HERO VISUAL -->
+
+          <div class="hero-visual">
+
+            <div class="hero-card hero-card-back">
+
+              <div class="mini-shirt">
+                <span>
+                  سِمة
+                </span>
+              </div>
 
             </div>
 
 
-            <div class="shop-toolbar">
+            <div class="hero-card hero-card-main">
 
-                <input
-                    id="search-input"
-                    type="search"
-                    placeholder="ابحث عن تصميم..."
-                    oninput="searchProducts()"
-                >
+              <div class="hero-shirt">
 
-                <select
-                    id="category-filter"
-                    onchange="filterProducts()"
-                >
+                <div class="shirt-sleeve left"></div>
 
-                    <option value="all">
-                        جميع التصاميم
-                    </option>
+                <div class="shirt-body">
 
-                    <option value="تيشيرتات">
-                        تيشيرتات
-                    </option>
+                  <div class="shirt-neck"></div>
 
-                    <option value="تخرج">
-                        تخرج
-                    </option>
+                  <div class="shirt-design">
 
-                    <option value="مناسبات">
-                        مناسبات
-                    </option>
+                    <small>
+                      YOUR
+                    </small>
 
-                    <option value="مجموعات">
-                        مجموعات
-                    </option>
+                    <strong>
+                      STYLE
+                    </strong>
 
-                </select>
+                    <span>
+                      سِمة
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <div class="shirt-sleeve right"></div>
+
+              </div>
+
+
+              <div class="hero-card-label">
+
+                <span>
+                  تصميمك
+                </span>
+
+                <strong>
+                  بطريقتك.
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="floating-badge badge-top">
+
+              <span>
+                ✦
+              </span>
+
+              صمّم
+
+            </div>
+
+
+            <div class="floating-badge badge-bottom">
+
+              <span>
+                ✓
+              </span>
+
+              اطلب
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CATEGORIES -->
+
+      <section class="section">
+
+        <div class="container">
+
+          <div class="section-heading">
+
+            <div>
+
+              <span class="section-label">
+                استكشف
+              </span>
+
+              <h2>
+                اختر مناسبتك
+              </h2>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="text-button"
+              onclick="showPage('shop')"
+            >
+
+              عرض كل المنتجات
+
+              <span>
+                ←
+              </span>
+
+            </button>
+
+          </div>
+
+
+          <div class="category-grid">
+
+
+            <button
+              type="button"
+              class="category-card category-shirt"
+              onclick="filterCategory('تيشيرتات')"
+            >
+
+              <div class="category-icon">
+                👕
+              </div>
+
+              <div class="category-info">
+
+                <span>
+                  اكتشف
+                </span>
+
+                <strong>
+                  تيشيرتات
+                </strong>
+
+              </div>
+
+              <span class="category-arrow">
+                ←
+              </span>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="category-card category-graduation"
+              onclick="filterCategory('تخرج')"
+            >
+
+              <div class="category-icon">
+                🎓
+              </div>
+
+              <div class="category-info">
+
+                <span>
+                  لحظتك
+                </span>
+
+                <strong>
+                  تخرج
+                </strong>
+
+              </div>
+
+              <span class="category-arrow">
+                ←
+              </span>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="category-card category-events"
+              onclick="filterCategory('مناسبات')"
+            >
+
+              <div class="category-icon">
+                ✦
+              </div>
+
+              <div class="category-info">
+
+                <span>
+                  احتفل
+                </span>
+
+                <strong>
+                  مناسبات
+                </strong>
+
+              </div>
+
+              <span class="category-arrow">
+                ←
+              </span>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="category-card category-groups"
+              onclick="filterCategory('مجموعات')"
+            >
+
+              <div class="category-icon">
+                ♧
+              </div>
+
+              <div class="category-info">
+
+                <span>
+                  مع جماعتك
+                </span>
+
+                <strong>
+                  مجموعات
+                </strong>
+
+              </div>
+
+              <span class="category-arrow">
+                ←
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- FEATURED PRODUCTS -->
+
+      <section class="section section-gray">
+
+        <div class="container">
+
+          <div class="section-heading">
+
+            <div>
+
+              <span class="section-label">
+                مختارات سِمة
+              </span>
+
+              <h2>
+                تصاميم ممكن تعجبك
+              </h2>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="text-button"
+              onclick="showPage('shop')"
+            >
+
+              شوف الكل
+
+              <span>
+                ←
+              </span>
+
+            </button>
+
+          </div>
+
+
+          <div
+            id="featured-products"
+            class="products-grid"
+          >
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- HOW IT WORKS -->
+
+      <section class="section">
+
+        <div class="container">
+
+          <div class="center-heading">
+
+            <span class="section-label">
+              كيف تعمل سِمة؟
+            </span>
+
+            <h2>
+              من الفكرة إلى القطعة
+            </h2>
+
+            <p>
+              ثلاث خطوات بسيطة تفصل بينك وبين تصميمك.
+            </p>
+
+          </div>
+
+
+          <div class="steps-grid">
+
+
+            <div class="step-card">
+
+              <div class="step-number">
+                01
+              </div>
+
+              <div class="step-icon">
+                ✦
+              </div>
+
+              <h3>
+                صمّم
+              </h3>
+
+              <p>
+                اختر القطعة وأضف النص أو فكرتك
+                وشوف شكل التصميم مباشرة.
+              </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+              <div class="step-number">
+                02
+              </div>
+
+              <div class="step-icon">
+                🛒
+              </div>
+
+              <h3>
+                اطلب
+              </h3>
+
+              <p>
+                اختر المقاس والكمية وأضف التصميم
+                إلى سلتك وأكمل الطلب.
+              </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+              <div class="step-number">
+                03
+              </div>
+
+              <div class="step-icon">
+                📦
+              </div>
+
+              <h3>
+                استلم
+              </h3>
+
+              <p>
+                يتم تجهيز طلبك وإرساله إليك
+                حسب عنوان التوصيل.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CREATOR BANNER -->
+
+      <section class="creator-banner">
+
+        <div class="container creator-banner-inner">
+
+          <div>
+
+            <span class="section-label">
+              للمبدعين
+            </span>
+
+            <h2>
+              عندك تصميم يستاهل ينشاف؟
+            </h2>
+
+            <p>
+              صمّم فكرتك، وبعد الموافقة عليها
+              يمكن عرضها داخل مجتمع سِمة.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="white-button"
+            onclick="showPage('designer')"
+          >
+
+            ابدأ تصميمك
+
+            <span>
+              ←
+            </span>
+
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- FINAL CTA -->
+
+      <section class="section final-cta">
+
+        <div class="container">
+
+          <div class="final-cta-box">
+
+            <div class="final-cta-content">
+
+              <span class="section-label">
+                سِمة
+              </span>
+
+              <h2>
+                فكرتك تستاهل تكون قطعة.
+              </h2>
+
+              <p>
+                لا تنتظر التصميم المثالي.
+                ابدأه بنفسك.
+              </p>
+
+              <button
+                type="button"
+                class="primary-button"
+                onclick="showPage('designer')"
+              >
+
+                صمّم الآن
+
+                <span>
+                  ✦
+                </span>
+
+              </button>
+
+            </div>
+
+
+            <div class="final-cta-symbol">
+              س
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+
+    <!-- =======================================================
+         SHOP
+    ======================================================== -->
+
+    <section
+      id="shop-page"
+      class="page"
+      data-page-section="shop"
+    >
+
+      <div class="container page-container">
+
+
+        <div class="page-header">
+
+          <div>
+
+            <span class="section-label">
+              سِمة
+            </span>
+
+            <h1>
+              المتجر
+            </h1>
+
+            <p>
+              اكتشف التصاميم واختر القطعة المناسبة لك.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="secondary-button"
+            onclick="showPage('designer')"
+          >
+
+            ✦ صمّم تصميمك
+
+          </button>
+
+        </div>
+
+
+        <!-- SHOP TOOLBAR -->
+
+        <div class="shop-toolbar">
+
+
+          <div class="search-box">
+
+            <span>
+              ⌕
+            </span>
+
+            <input
+              id="search-input"
+              type="search"
+              placeholder="ابحث عن تصميم..."
+              autocomplete="off"
+              oninput="searchProducts(this.value)"
+            >
+
+            <button
+              type="button"
+              class="clear-search"
+              onclick="clearSearch()"
+              aria-label="مسح البحث"
+            >
+              ×
+            </button>
+
+          </div>
+
+
+          <div class="filter-group">
+
+
+            <button
+              type="button"
+              class="filter-button active"
+              data-category="الكل"
+              onclick="filterCategory('الكل')"
+            >
+              الكل
+            </button>
+
+
+            <button
+              type="button"
+              class="filter-button"
+              data-category="تيشيرتات"
+              onclick="filterCategory('تيشيرتات')"
+            >
+              تيشيرتات
+            </button>
+
+
+            <button
+              type="button"
+              class="filter-button"
+              data-category="تخرج"
+              onclick="filterCategory('تخرج')"
+            >
+              تخرج
+            </button>
+
+
+            <button
+              type="button"
+              class="filter-button"
+              data-category="مناسبات"
+              onclick="filterCategory('مناسبات')"
+            >
+              مناسبات
+            </button>
+
+
+            <button
+              type="button"
+              class="filter-button"
+              data-category="مجموعات"
+              onclick="filterCategory('مجموعات')"
+            >
+              مجموعات
+            </button>
+
+          </div>
+
+
+          <div class="sort-box">
+
+            <label for="sort-products">
+              ترتيب:
+            </label>
+
+            <select
+              id="sort-products"
+              onchange="sortProducts(this.value)"
+            >
+
+              <option value="default">
+                الأحدث
+              </option>
+
+              <option value="price-low">
+                السعر: الأقل
+              </option>
+
+              <option value="price-high">
+                السعر: الأعلى
+              </option>
+
+              <option value="name">
+                الاسم
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="shop-products"
+          class="products-grid shop-products-grid"
+        >
+        </div>
+
+
+        <div
+          id="shop-empty"
+          class="empty-state hidden"
+        >
+
+          <div class="empty-icon">
+            ⌕
+          </div>
+
+          <h3>
+            ما لقينا تصميم مناسب
+          </h3>
+
+          <p>
+            جرّب كلمة بحث ثانية أو اختر تصنيف مختلف.
+          </p>
+
+          <button
+            type="button"
+            class="primary-button"
+            onclick="clearSearch(); filterCategory('الكل')"
+          >
+            عرض كل المنتجات
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         DESIGNER
+    ======================================================== -->
+
+    <section
+      id="designer-page"
+      class="page"
+      data-page-section="designer"
+    >
+
+      <div class="container page-container designer-container">
+
+
+        <div class="page-header designer-page-header">
+
+          <div>
+
+            <span class="section-label">
+              أداة التصميم
+            </span>
+
+            <h1>
+              صمّمها بطريقتك
+            </h1>
+
+            <p>
+              عدّل التصميم وشوف النتيجة قبل ما تطلب.
+            </p>
+
+          </div>
+
+
+          <div class="designer-status">
+
+            <span class="status-dot"></span>
+
+            المعاينة مباشرة
+
+          </div>
+
+        </div>
+
+
+        <div class="designer-layout">
+
+
+          <!-- DESIGN PREVIEW -->
+
+          <div class="designer-preview-card">
+
+            <div class="preview-topbar">
+
+              <span>
+                معاينة التصميم
+              </span>
+
+              <button
+                type="button"
+                onclick="resetDesigner()"
+                class="small-button"
+              >
+                إعادة ضبط
+              </button>
 
             </div>
 
 
             <div
-                id="shop-products"
-                class="product-grid"
+              id="design-preview"
+              class="design-preview"
             >
 
-                <!-- Products generated by app.js -->
+              <div
+                id="design-shirt"
+                class="design-shirt black-shirt"
+              >
+
+                <div class="shirt-sleeve shirt-sleeve-left"></div>
+
+
+                <div class="shirt-main">
+
+                  <div class="shirt-collar"></div>
+
+
+                  <div
+                    id="shirt-design-content"
+                    class="shirt-design-content"
+                  >
+
+                    <span
+                      id="shirt-text"
+                      class="shirt-text"
+                    >
+                      سِمة
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <div class="shirt-sleeve shirt-sleeve-right"></div>
+
+              </div>
 
             </div>
 
-        </section>
+
+            <div class="preview-note">
+
+              <span>
+                ⓘ
+              </span>
+
+              <p>
+                المعاينة تقريبية وقد يختلف شكل الطباعة النهائي قليلًا.
+              </p>
+
+            </div>
+
+          </div>
 
 
-        <!-- ================= DESIGNER ================= -->
+          <!-- DESIGN CONTROLS -->
 
-        <section id="designer-page" class="page">
+          <div class="designer-controls-card">
 
-            <div class="page-header">
 
-                <span class="section-label">
-                    المصمم
+            <!-- PRODUCT TYPE -->
+
+            <div class="designer-control-section">
+
+              <div class="control-heading">
+
+                <span>
+                  01
                 </span>
 
-                <h1>
-                    صمّم منتجك
-                </h1>
+                <div>
 
-                <p>
-                    ابدأ تصميمك واختر التفاصيل التي تناسبك.
-                </p>
+                  <strong>
+                    اختر القطعة
+                  </strong>
+
+                  <small>
+                    وش تبغى تصمم؟
+                  </small>
+
+                </div>
+
+              </div>
+
+
+              <div class="product-type-grid">
+
+
+                <button
+                  type="button"
+                  class="product-type active"
+                  data-product-type="تيشيرت"
+                  onclick="selectProductType('تيشيرت')"
+                >
+
+                  <span class="type-icon">
+                    👕
+                  </span>
+
+                  <span>
+                    تيشيرت
+                  </span>
+
+                </button>
+
+
+                <button
+                  type="button"
+                  class="product-type"
+                  data-product-type="هودي"
+                  onclick="selectProductType('هودي')"
+                >
+
+                  <span class="type-icon">
+                    🧥
+                  </span>
+
+                  <span>
+                    هودي
+                  </span>
+
+                </button>
+
+              </div>
 
             </div>
 
 
-            <div class="designer-layout">
+            <!-- COLOR -->
 
+            <div class="designer-control-section">
 
-                <div class="designer-preview">
+              <div class="control-heading">
 
-                    <div
-                        id="design-shirt"
-                        class="designer-shirt"
-                    >
+                <span>
+                  02
+                </span>
 
-                        <span id="shirt-text">
-                            سِمة
-                        </span>
+                <div>
 
-                    </div>
+                  <strong>
+                    لون القطعة
+                  </strong>
 
-                </div>
-
-
-                <div class="designer-controls">
-
-                    <div class="control-group">
-
-                        <label>
-                            نوع المنتج
-                        </label>
-
-                        <select id="product-type">
-
-                            <option value="تيشيرت">
-                                تيشيرت
-                            </option>
-
-                            <option value="هودي">
-                                هودي
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="control-group">
-
-                        <label>
-                            لون المنتج
-                        </label>
-
-                        <div class="color-options">
-
-                            <button
-                                class="color-option white"
-                                onclick="changeShirtColor('#f5f5f5')"
-                                aria-label="أبيض"
-                            ></button>
-
-                            <button
-                                class="color-option black"
-                                onclick="changeShirtColor('#151515')"
-                                aria-label="أسود"
-                            ></button>
-
-                            <button
-                                class="color-option gray"
-                                onclick="changeShirtColor('#777')"
-                                aria-label="رمادي"
-                            ></button>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="control-group">
-
-                        <label for="custom-text">
-                            النص
-                        </label>
-
-                        <input
-                            id="custom-text"
-                            type="text"
-                            maxlength="30"
-                            placeholder="اكتب النص..."
-                            oninput="updateDesignText(this.value)"
-                        >
-
-                    </div>
-
-
-                    <div class="control-group">
-
-                        <label for="size-select">
-                            المقاس
-                        </label>
-
-                        <select id="size-select">
-
-                            <option value="S">
-                                S
-                            </option>
-
-                            <option value="M" selected>
-                                M
-                            </option>
-
-                            <option value="L">
-                                L
-                            </option>
-
-                            <option value="XL">
-                                XL
-                            </option>
-
-                            <option value="XXL">
-                                XXL
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <button
-                        class="primary-button full-button"
-                        onclick="addCustomDesignToCart()"
-                    >
-                        أضف للسلة
-                    </button>
+                  <small>
+                    اختر اللون
+                  </small>
 
                 </div>
+
+              </div>
+
+
+              <div class="color-options">
+
+
+                <button
+                  type="button"
+                  class="color-option black active"
+                  data-color="black"
+                  onclick="selectShirtColor('black')"
+                  aria-label="أسود"
+                ></button>
+
+
+                <button
+                  type="button"
+                  class="color-option white"
+                  data-color="white"
+                  onclick="selectShirtColor('white')"
+                  aria-label="أبيض"
+                ></button>
+
+
+                <button
+                  type="button"
+                  class="color-option gray"
+                  data-color="gray"
+                  onclick="selectShirtColor('gray')"
+                  aria-label="رمادي"
+                ></button>
+
+
+                <button
+                  type="button"
+                  class="color-option beige"
+                  data-color="beige"
+                  onclick="selectShirtColor('beige')"
+                  aria-label="بيج"
+                ></button>
+
+
+                <button
+                  type="button"
+                  class="color-option green"
+                  data-color="green"
+                  onclick="selectShirtColor('green')"
+                  aria-label="أخضر"
+                ></button>
+
+
+                <button
+                  type="button"
+                  class="color-option blue"
+                  data-color="blue"
+                  onclick="selectShirtColor('blue')"
+                  aria-label="أزرق"
+                ></button>
+
+              </div>
 
             </div>
 
-        </section>
+
+            <!-- TEXT -->
+
+            <div class="designer-control-section">
+
+              <div class="control-heading">
+
+                <span>
+                  03
+                </span>
+
+                <div>
+
+                  <strong>
+                    اكتب فكرتك
+                  </strong>
+
+                  <small>
+                    النص اللي تبغاه على القطعة
+                  </small>
+
+                </div>
+
+              </div>
 
 
-        <!-- ================= PRODUCT ================= -->
+              <div class="designer-input">
 
-        <section id="product-page" class="page">
+                <input
+                  id="custom-text"
+                  type="text"
+                  maxlength="35"
+                  placeholder="اكتب هنا..."
+                  oninput="updateDesignText(this.value)"
+                >
+
+                <span id="text-counter">
+                  0/35
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- SIZE -->
+
+            <div class="designer-control-section">
+
+              <div class="control-heading">
+
+                <span>
+                  04
+                </span>
+
+                <div>
+
+                  <strong>
+                    المقاس
+                  </strong>
+
+                  <small>
+                    اختر المقاس المناسب
+                  </small>
+
+                </div>
+
+              </div>
+
+
+              <div class="size-options">
+
+
+                <button
+                  type="button"
+                  class="size-option"
+                  data-size="XS"
+                  onclick="selectSize('XS')"
+                >
+                  XS
+                </button>
+
+
+                <button
+                  type="button"
+                  class="size-option active"
+                  data-size="S"
+                  onclick="selectSize('S')"
+                >
+                  S
+                </button>
+
+
+                <button
+                  type="button"
+                  class="size-option"
+                  data-size="M"
+                  onclick="selectSize('M')"
+                >
+                  M
+                </button>
+
+
+                <button
+                  type="button"
+                  class="size-option"
+                  data-size="L"
+                  onclick="selectSize('L')"
+                >
+                  L
+                </button>
+
+
+                <button
+                  type="button"
+                  class="size-option"
+                  data-size="XL"
+                  onclick="selectSize('XL')"
+                >
+                  XL
+                </button>
+
+
+                <button
+                  type="button"
+                  class="size-option"
+                  data-size="XXL"
+                  onclick="selectSize('XXL')"
+                >
+                  XXL
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            <div class="designer-price">
+
+              <div>
+
+                <span>
+                  السعر التقديري
+                </span>
+
+                <small>
+                  يشمل التصميم الأساسي
+                </small>
+
+              </div>
+
+
+              <strong>
+
+                <span id="designer-price">
+                  79
+                </span>
+
+                <small>
+                  ر.س
+                </small>
+
+              </strong>
+
+            </div>
+
+
+            <!-- ADD TO CART -->
 
             <button
-                class="back-button"
-                onclick="showPage('shop')"
+              type="button"
+              class="primary-button full-width"
+              onclick="addCustomDesignToCart()"
             >
-                ← العودة للمتجر
+
+              <span>
+                🛒
+              </span>
+
+              أضف للسلة
+
             </button>
 
-            <div id="product-details">
 
-                <!-- Product generated by app.js -->
+            <!-- SAVE -->
 
-            </div>
+            <button
+              type="button"
+              class="outline-button full-width"
+              onclick="saveDesign()"
+            >
+              ♡ حفظ التصميم
+            </button>
 
-        </section>
 
+            <!-- SELL -->
 
-        <!-- ================= CART ================= -->
+            <button
+              type="button"
+              class="text-button centered-button"
+              onclick="submitDesignForSale()"
+            >
 
-        <section id="cart-page" class="page">
+              عندك تصميم وتبغى تعرضه للبيع؟
 
-            <div class="page-header">
+              <span>
+                ←
+              </span>
 
-                <span class="section-label">
-                    طلبك
-                </span>
+            </button>
 
-                <h1>
-                    سلة المشتريات
-                </h1>
-
-            </div>
-
-
-            <div class="cart-layout">
-
-                <div
-                    id="cart-items"
-                    class="cart-items"
-                >
-
-                    <!-- Cart generated by app.js -->
-
-                </div>
-
-
-                <aside class="cart-summary">
-
-                    <h3>
-                        ملخص الطلب
-                    </h3>
-
-                    <div class="summary-row">
-
-                        <span>
-                            المنتجات
-                        </span>
-
-                        <strong id="cart-subtotal">
-                            0 ر.س
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-row">
-
-                        <span>
-                            الشحن
-                        </span>
-
-                        <strong>
-                            يحسب لاحقًا
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-total">
-
-                        <span>
-                            الإجمالي
-                        </span>
-
-                        <strong id="cart-total">
-                            0 ر.س
-                        </strong>
-
-                    </div>
-
-
-                    <button
-                        class="primary-button full-button"
-                        onclick="goToCheckout()"
-                    >
-                        إتمام الطلب
-                    </button>
-
-                </aside>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= CHECKOUT ================= -->
-
-        <section id="checkout-page" class="page">
-
-            <div class="page-header">
-
-                <span class="section-label">
-                    إتمام الطلب
-                </span>
-
-                <h1>
-                    بيانات الطلب
-                </h1>
-
-                <p>
-                    الدفع الإلكتروني سيتم ربطه عبر Paylink في المرحلة التالية.
-                </p>
-
-            </div>
-
-
-            <div class="checkout-layout">
-
-                <form
-                    id="checkout-form"
-                    class="checkout-form"
-                    onsubmit="submitOrder(event)"
-                >
-
-                    <div class="control-group">
-
-                        <label for="customer-name">
-                            الاسم
-                        </label>
-
-                        <input
-                            id="customer-name"
-                            type="text"
-                            required
-                            placeholder="الاسم الكامل"
-                        >
-
-                    </div>
-
-
-                    <div class="control-group">
-
-                        <label for="customer-phone">
-                            رقم الجوال
-                        </label>
-
-                        <input
-                            id="customer-phone"
-                            type="tel"
-                            required
-                            placeholder="05xxxxxxxx"
-                        >
-
-                    </div>
-
-
-                    <div class="control-group">
-
-                        <label for="customer-city">
-                            المدينة
-                        </label>
-
-                        <input
-                            id="customer-city"
-                            type="text"
-                            required
-                            placeholder="الرياض"
-                        >
-
-                    </div>
-
-
-                    <div class="control-group">
-
-                        <label for="customer-address">
-                            العنوان
-                        </label>
-
-                        <textarea
-                            id="customer-address"
-                            required
-                            placeholder="العنوان بالتفصيل"
-                        ></textarea>
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="primary-button full-button"
-                    >
-                        الانتقال للدفع
-                    </button>
-
-                </form>
-
-
-                <aside class="checkout-summary">
-
-                    <h3>
-                        ملخص الطلب
-                    </h3>
-
-                    <div
-                        id="checkout-items"
-                    ></div>
-
-                    <div class="summary-total">
-
-                        <span>
-                            الإجمالي
-                        </span>
-
-                        <strong id="checkout-total">
-                            0 ر.س
-                        </strong>
-
-                    </div>
-
-                </aside>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= ACCOUNT ================= -->
-
-        <section id="account-page" class="page">
-
-            <div class="account-box">
-
-                <span class="section-label">
-                    سِمة
-                </span>
-
-                <h1>
-                    حسابك
-                </h1>
-
-                <p>
-                    تسجيل الدخول وإدارة الطلبات ستكون متاحة في المرحلة القادمة.
-                </p>
-
-                <button
-                    class="primary-button"
-                    onclick="showPage('home')"
-                >
-                    العودة للرئيسية
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= ABOUT ================= -->
-
-        <section id="about-page" class="page">
-
-            <div class="about-content">
-
-                <span class="section-label">
-                    من نحن
-                </span>
-
-                <h1>
-                    سِمة
-                </h1>
-
-                <p>
-                    سِمة منصة تتيح لك اكتشاف التصاميم وصناعة
-                    منتج يعبر عن فكرتك ومناسبتك.
-                </p>
-
-                <p>
-                    هدفنا أن نجعل تصميم الملابس أسهل وأقرب
-                    للجميع، سواء كنت تصمم لنفسك أو لمجموعتك.
-                </p>
-
-                <button
-                    class="primary-button"
-                    onclick="showPage('designer')"
-                >
-                    صمّم الآن
-                </button>
-
-            </div>
-
-        </section>
-
-
-    </main>
-
-
-    <!-- ================= FOOTER ================= -->
-
-    <footer class="footer">
-
-        <div class="footer-container">
-
-            <div>
-
-                <div class="footer-logo">
-                    سِمة
-                </div>
-
-                <p>
-                    صمّمها بطريقتك.
-                </p>
-
-            </div>
-
-
-            <div class="footer-links">
-
-                <button onclick="showPage('shop')">
-                    المتجر
-                </button>
-
-                <button onclick="showPage('designer')">
-                    صمّم الآن
-                </button>
-
-                <button onclick="showPage('about')">
-                    عن سِمة
-                </button>
-
-            </div>
-
-
-            <div class="footer-copy">
-
-                © 2026 سِمة
-
-            </div>
+          </div>
 
         </div>
 
-    </footer>
+      </div>
+
+    </section>
 
 
-    <!-- ================= SCRIPT ================= -->
+    <!-- =======================================================
+         PRODUCT
+    ======================================================== -->
 
-    <script src="app.js"></script>
+    <section
+      id="product-page"
+      class="page"
+      data-page-section="product"
+    >
+
+      <div class="container page-container">
+
+        <button
+          type="button"
+          class="back-button"
+          onclick="showPage('shop')"
+        >
+
+          →
+
+          العودة للمتجر
+
+        </button>
+
+
+        <div
+          id="product-details"
+          class="product-details"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         CART
+    ======================================================== -->
+
+    <section
+      id="cart-page"
+      class="page"
+      data-page-section="cart"
+    >
+
+      <div class="container page-container">
+
+
+        <div class="page-header">
+
+          <div>
+
+            <span class="section-label">
+              طلبك
+            </span>
+
+            <h1>
+              سلتك
+            </h1>
+
+            <p>
+              راجع المنتجات قبل إكمال الطلب.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="secondary-button"
+            onclick="showPage('shop')"
+          >
+            مواصلة التسوق
+          </button>
+
+        </div>
+
+
+        <div class="cart-layout">
+
+
+          <div class="cart-items-container">
+
+            <div
+              id="cart-items"
+              class="cart-items"
+            >
+            </div>
+
+
+            <div
+              id="cart-empty"
+              class="empty-state hidden"
+            >
+
+              <div class="empty-icon">
+                🛒
+              </div>
+
+              <h3>
+                السلة فاضية
+              </h3>
+
+              <p>
+                لسه ما أضفت أي منتج.
+              </p>
+
+              <button
+                type="button"
+                class="primary-button"
+                onclick="showPage('shop')"
+              >
+                ابدأ التسوق
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <aside class="cart-summary">
+
+            <h2>
+              ملخص الطلب
+            </h2>
+
+
+            <div class="summary-row">
+
+              <span>
+                المنتجات
+              </span>
+
+              <strong id="cart-subtotal">
+                0 ر.س
+              </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+              <span>
+                الشحن
+              </span>
+
+              <span id="cart-shipping">
+                يحسب لاحقًا
+              </span>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <div class="summary-total">
+
+              <span>
+                الإجمالي
+              </span>
+
+              <strong id="cart-total">
+                0 ر.س
+              </strong>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="primary-button full-width"
+              onclick="goToCheckout()"
+            >
+
+              إكمال الطلب
+
+              <span>
+                ←
+              </span>
+
+            </button>
+
+
+            <div class="payment-note">
+
+              <span>
+                🔒
+              </span>
+
+              <p>
+                بيانات الدفع يتم التعامل معها عبر بوابة الدفع عند تفعيلها.
+              </p>
+
+            </div>
+
+          </aside>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         CHECKOUT
+    ======================================================== -->
+
+    <section
+      id="checkout-page"
+      class="page"
+      data-page-section="checkout"
+    >
+
+      <div class="container page-container">
+
+
+        <div class="page-header">
+
+          <div>
+
+            <span class="section-label">
+              الخطوة الأخيرة
+            </span>
+
+            <h1>
+              إتمام الطلب
+            </h1>
+
+            <p>
+              أدخل بيانات التوصيل لإكمال طلبك.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="checkout-layout">
+
+
+          <!-- FORM -->
+
+          <div class="checkout-form-card">
+
+            <form
+              id="checkout-form"
+              onsubmit="submitOrder(event)"
+              novalidate
+            >
+
+
+              <!-- CUSTOMER DATA -->
+
+              <div class="form-section">
+
+                <div class="form-section-title">
+
+                  <span>
+                    01
+                  </span>
+
+                  <div>
+
+                    <h2>
+                      بيانات العميل
+                    </h2>
+
+                    <p>
+                      نحتاجها لتجهيز الطلب والتواصل معك.
+                    </p>
+
+                  </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+
+                  <div class="form-field full">
+
+                    <label for="customer-name">
+                      الاسم الكامل
+                    </label>
+
+                    <input
+                      id="customer-name"
+                      name="name"
+                      type="text"
+                      placeholder="مثال: محمد أحمد"
+                      autocomplete="name"
+                      required
+                    >
+
+                    <small class="field-error"></small>
+
+                  </div>
+
+
+                  <div class="form-field">
+
+                    <label for="customer-phone">
+                      رقم الجوال
+                    </label>
+
+                    <input
+                      id="customer-phone"
+                      name="phone"
+                      type="tel"
+                      inputmode="tel"
+                      placeholder="05xxxxxxxx"
+                      autocomplete="tel"
+                      required
+                    >
+
+                    <small class="field-error"></small>
+
+                  </div>
+
+
+                  <div class="form-field">
+
+                    <label for="customer-city">
+                      المدينة
+                    </label>
+
+                    <select
+                      id="customer-city"
+                      name="city"
+                      required
+                    >
+
+                      <option value="">
+                        اختر المدينة
+                      </option>
+
+                      <option value="الرياض">
+                        الرياض
+                      </option>
+
+                      <option value="جدة">
+                        جدة
+                      </option>
+
+                      <option value="الدمام">
+                        الدمام
+                      </option>
+
+                      <option value="مكة">
+                        مكة
+                      </option>
+
+                      <option value="المدينة المنورة">
+                        المدينة المنورة
+                      </option>
+
+                      <option value="الطائف">
+                        الطائف
+                      </option>
+
+                      <option value="أبها">
+                        أبها
+                      </option>
+
+                      <option value="تبوك">
+                        تبوك
+                      </option>
+
+                      <option value="أخرى">
+                        مدينة أخرى
+                      </option>
+
+                    </select>
+
+                    <small class="field-error"></small>
+
+                  </div>
+
+
+                  <div class="form-field full">
+
+                    <label for="customer-address">
+                      العنوان
+                    </label>
+
+                    <textarea
+                      id="customer-address"
+                      name="address"
+                      rows="4"
+                      placeholder="الحي، الشارع، رقم المبنى..."
+                      autocomplete="street-address"
+                      required
+                    ></textarea>
+
+                    <small class="field-error"></small>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <!-- PAYMENT -->
+
+              <div class="form-section">
+
+                <div class="form-section-title">
+
+                  <span>
+                    02
+                  </span>
+
+                  <div>
+
+                    <h2>
+                      طريقة الدفع
+                    </h2>
+
+                    <p>
+                      سيتم تحويلك إلى بوابة الدفع الآمنة بعد تأكيد الطلب.
+                    </p>
+
+                  </div>
+
+                </div>
+
+
+                <label class="payment-method selected">
+
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="paylink"
+                    checked
+                  >
+
+                  <span class="payment-radio"></span>
+
+
+                  <span class="payment-method-content">
+
+                    <strong>
+                      الدفع الإلكتروني
+                    </strong>
+
+                    <small>
+                      بطاقة مدى، فيزا، ماستركارد وطرق الدفع المتاحة.
+                    </small>
+
+                  </span>
+
+
+                  <span class="payment-method-icon">
+                    💳
+                  </span>
+
+                </label>
+
+              </div>
+
+
+              <!-- ACTIONS -->
+
+              <div class="checkout-actions">
+
+                <button
+                  type="button"
+                  class="secondary-button"
+                  onclick="showPage('cart')"
+                >
+                  العودة للسلة
+                </button>
+
+
+                <button
+                  type="submit"
+                  class="primary-button"
+                  id="submit-order-button"
+                >
+
+                  تأكيد الطلب والدفع
+
+                  <span>
+                    ←
+                  </span>
+
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+
+          <!-- SUMMARY -->
+
+          <aside class="checkout-summary">
+
+            <h2>
+              ملخص طلبك
+            </h2>
+
+
+            <div
+              id="checkout-summary-items"
+              class="checkout-summary-items"
+            >
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <div class="summary-row">
+
+              <span>
+                المنتجات
+              </span>
+
+              <strong id="checkout-subtotal">
+                0 ر.س
+              </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+              <span>
+                الشحن
+              </span>
+
+              <span>
+                يحسب لاحقًا
+              </span>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <div class="summary-total">
+
+              <span>
+                الإجمالي
+              </span>
+
+              <strong id="checkout-total">
+                0 ر.س
+              </strong>
+
+            </div>
+
+
+            <div class="checkout-security">
+
+              <span>
+                🔒
+              </span>
+
+              <div>
+
+                <strong>
+                  دفع آمن
+                </strong>
+
+                <p>
+                  لا نحفظ بيانات بطاقتك البنكية على متجر سِمة.
+                </p>
+
+              </div>
+
+            </div>
+
+          </aside>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         ACCOUNT
+    ======================================================== -->
+
+    <section
+      id="account-page"
+      class="page"
+      data-page-section="account"
+    >
+
+      <div class="container page-container">
+
+
+        <div class="page-header">
+
+          <div>
+
+            <span class="section-label">
+              حسابك
+            </span>
+
+            <h1>
+              حسابي
+            </h1>
+
+            <p>
+              تابع طلباتك وتصاميمك من مكان واحد.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="account-layout">
+
+
+          <div class="account-card account-profile-card">
+
+            <div class="account-avatar">
+              س
+            </div>
+
+
+            <div>
+
+              <h2>
+                مرحبًا في سِمة
+              </h2>
+
+              <p>
+                سجل دخولك لاحقًا لمتابعة طلباتك وحفظ تصاميمك.
+              </p>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="primary-button"
+              onclick="showLoginMessage()"
+            >
+              تسجيل الدخول
+            </button>
+
+          </div>
+
+
+          <div class="account-grid">
+
+
+            <button
+              type="button"
+              class="account-action-card"
+              onclick="showOrdersMessage()"
+            >
+
+              <span class="account-action-icon">
+                📦
+              </span>
+
+              <strong>
+                طلباتي
+              </strong>
+
+              <small>
+                تابع حالة طلباتك
+              </small>
+
+              <span class="card-arrow">
+                ←
+              </span>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="account-action-card"
+              onclick="showSavedDesigns()"
+            >
+
+              <span class="account-action-icon">
+                ♡
+              </span>
+
+              <strong>
+                تصاميمي المحفوظة
+              </strong>
+
+              <small>
+                ارجع لأفكارك السابقة
+              </small>
+
+              <span class="card-arrow">
+                ←
+              </span>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="account-action-card"
+              onclick="showPage('designer')"
+            >
+
+              <span class="account-action-icon">
+                ✦
+              </span>
+
+              <strong>
+                تصميم جديد
+              </strong>
+
+              <small>
+                ابدأ من الصفر
+              </small>
+
+              <span class="card-arrow">
+                ←
+              </span>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="account-action-card"
+              onclick="showPage('about')"
+            >
+
+              <span class="account-action-icon">
+                ?
+              </span>
+
+              <strong>
+                المساعدة
+              </strong>
+
+              <small>
+                تعرف أكثر عن سِمة
+              </small>
+
+              <span class="card-arrow">
+                ←
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         ABOUT
+    ======================================================== -->
+
+    <section
+      id="about-page"
+      class="page"
+      data-page-section="about"
+    >
+
+      <div class="container page-container">
+
+
+        <div class="about-hero">
+
+          <span class="section-label">
+            عن سِمة
+          </span>
+
+          <h1>
+
+            مو مجرد ملابس.
+
+            <br>
+
+            <span>
+              هي فكرتك.
+            </span>
+
+          </h1>
+
+
+          <p>
+            سِمة منصة تهدف إلى إعطاء الناس مساحة
+            يصممون فيها قطعهم بطريقتهم،
+            ويشاركون أفكارهم مع مجتمع يهتم بالتصميم والتميز.
+          </p>
+
+        </div>
+
+
+        <div class="about-values">
+
+
+          <div class="about-value">
+
+            <span>
+              01
+            </span>
+
+            <h2>
+              الإبداع
+            </h2>
+
+            <p>
+              كل شخص عنده فكرة مختلفة،
+              وسِمة تعطيه الأدوات لتحويلها إلى تصميم.
+            </p>
+
+          </div>
+
+
+          <div class="about-value">
+
+            <span>
+              02
+            </span>
+
+            <h2>
+              المشاركة
+            </h2>
+
+            <p>
+              التصميم ممكن يكون لك،
+              وممكن تشاركه مع الآخرين.
+            </p>
+
+          </div>
+
+
+          <div class="about-value">
+
+            <span>
+              03
+            </span>
+
+            <h2>
+              البس فكرتك
+            </h2>
+
+            <p>
+              من مناسبة خاصة إلى تصميم يومي،
+              أنت تحدد وش تبغى تلبس.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="about-how">
+
+          <div class="about-how-content">
+
+            <span class="section-label">
+              رؤيتنا
+            </span>
+
+            <h2>
+              نخلي تصميم الملابس
+              أقرب وأسهل.
+            </h2>
+
+            <p>
+              نعمل على بناء تجربة تجمع بين التصميم،
+              الشراء، والمشاركة في مكان واحد.
+            </p>
+
+
+            <button
+              type="button"
+              class="primary-button"
+              onclick="showPage('designer')"
+            >
+
+              جرّب المصمم
+
+              <span>
+                ✦
+              </span>
+
+            </button>
+
+          </div>
+
+
+          <div class="about-big-logo">
+            سِمة
+          </div>
+
+        </div>
+
+
+        <!-- FAQ -->
+
+        <div class="faq-section">
+
+          <div class="center-heading">
+
+            <span class="section-label">
+              أسئلة شائعة
+            </span>
+
+            <h2>
+              عندك سؤال؟
+            </h2>
+
+          </div>
+
+
+          <div class="faq-list">
+
+
+            <details class="faq-item">
+
+              <summary>
+
+                هل أقدر أصمم تيشيرتي بنفسي؟
+
+                <span>
+                  +
+                </span>
+
+              </summary>
+
+              <p>
+                نعم، من صفحة صمّم الآن تقدر تختار القطعة
+                واللون والمقاس وتضيف النص ثم تشوف المعاينة.
+              </p>
+
+            </details>
+
+
+            <details class="faq-item">
+
+              <summary>
+
+                هل أقدر أبيع تصميمي؟
+
+                <span>
+                  +
+                </span>
+
+              </summary>
+
+              <p>
+                سِمة مصممة لتدعم مشاركة التصاميم وعرضها
+                بعد مراجعتها والموافقة عليها.
+              </p>
+
+            </details>
+
+
+            <details class="faq-item">
+
+              <summary>
+
+                هل الدفع الإلكتروني متوفر؟
+
+                <span>
+                  +
+                </span>
+
+              </summary>
+
+              <p>
+                سيتم ربط الدفع الإلكتروني عبر بوابة دفع
+                مخصصة للمتجر.
+              </p>
+
+            </details>
+
+
+            <details class="faq-item">
+
+              <summary>
+
+                هل أقدر أطلب أكثر من قطعة؟
+
+                <span>
+                  +
+                </span>
+
+              </summary>
+
+              <p>
+                نعم، تقدر تضيف أكثر من منتج إلى السلة
+                وتكملها في طلب واحد.
+              </p>
+
+            </details>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================== -->
+
+  <footer class="site-footer">
+
+    <div class="container">
+
+
+      <div class="footer-main">
+
+
+        <!-- BRAND -->
+
+        <div class="footer-brand">
+
+          <button
+            type="button"
+            class="footer-logo"
+            onclick="showPage('home')"
+          >
+
+            <span class="brand-mark">
+              س
+            </span>
+
+            <span>
+              سِمة
+            </span>
+
+          </button>
+
+
+          <p>
+            صمّمها بطريقتك.
+            <br>
+            والبس فكرتك.
+          </p>
+
+        </div>
+
+
+        <!-- LINKS -->
+
+        <div class="footer-column">
+
+          <h3>
+            سِمة
+          </h3>
+
+
+          <button
+            type="button"
+            onclick="showPage('about')"
+          >
+            عن سِمة
+          </button>
+
+
+          <button
+            type="button"
+            onclick="showPage('shop')"
+          >
+            المتجر
+          </button>
+
+
+          <button
+            type="button"
+            onclick="showPage('designer')"
+          >
+            صمّم الآن
+          </button>
+
+        </div>
+
+
+        <!-- HELP -->
+
+        <div class="footer-column">
+
+          <h3>
+            مساعدة
+          </h3>
+
+
+          <button
+            type="button"
+            onclick="showPage('account')"
+          >
+            حسابي
+          </button>
+
+
+          <button
+            type="button"
+            onclick="showPage('cart')"
+          >
+            السلة
+          </button>
+
+
+          <button
+            type="button"
+            onclick="showPage('about')"
+          >
+            الأسئلة الشائعة
+          </button>
+
+        </div>
+
+
+        <!-- SOCIAL -->
+
+        <div class="footer-column footer-contact">
+
+          <h3>
+            تواصل
+          </h3>
+
+          <p>
+            تابع سِمة لمعرفة الجديد.
+          </p>
+
+
+          <div class="social-links">
+
+
+            <button
+              type="button"
+              aria-label="Instagram"
+              onclick="showSocialMessage('Instagram')"
+            >
+              ◎
+            </button>
+
+
+            <button
+              type="button"
+              aria-label="TikTok"
+              onclick="showSocialMessage('TikTok')"
+            >
+              ♪
+            </button>
+
+
+            <button
+              type="button"
+              aria-label="X"
+              onclick="showSocialMessage('X')"
+            >
+              𝕏
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="footer-bottom">
+
+        <span>
+          ©
+          <span id="current-year">
+            2026
+          </span>
+          سِمة. جميع الحقوق محفوظة.
+        </span>
+
+
+        <span>
+          صُنع في السعودية 🇸🇦
+        </span>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =========================================================
+       MODAL
+  ========================================================== -->
+
+  <div
+    id="modal-overlay"
+    class="modal-overlay hidden"
+    onclick="closeModalOnOverlay(event)"
+  >
+
+    <div
+      id="modal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+    >
+
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeModal()"
+        aria-label="إغلاق"
+      >
+        ×
+      </button>
+
+
+      <div id="modal-content">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MAIN JAVASCRIPT
+  ========================================================== -->
+
+  <script src="app.js"></script>
+
+
+  <!-- =========================================================
+       UI HELPERS
+  ========================================================== -->
+
+  <script>
+
+    function toggleMobileMenu() {
+
+      const menu =
+        document.getElementById("mobile-menu");
+
+      if (!menu) return;
+
+      menu.classList.toggle("open");
+
+    }
+
+
+    function closeMobileMenu() {
+
+      const menu =
+        document.getElementById("mobile-menu");
+
+      if (!menu) return;
+
+      menu.classList.remove("open");
+
+    }
+
+
+    function closeModalOnOverlay(event) {
+
+      if (
+        event.target === event.currentTarget
+      ) {
+
+        closeModal();
+
+      }
+
+    }
+
+
+    function closeModal() {
+
+      const overlay =
+        document.getElementById("modal-overlay");
+
+      if (!overlay) return;
+
+      overlay.classList.add("hidden");
+
+    }
+
+
+    function openModal(content) {
+
+      const overlay =
+        document.getElementById("modal-overlay");
+
+      const modalContent =
+        document.getElementById("modal-content");
+
+      if (
+        !overlay ||
+        !modalContent
+      ) {
+        return;
+      }
+
+      modalContent.innerHTML = content;
+
+      overlay.classList.remove("hidden");
+
+    }
+
+
+    function showLoginMessage() {
+
+      openModal(`
+
+        <div class="modal-icon">
+          👤
+        </div>
+
+        <h2>
+          الحسابات قريبًا
+        </h2>
+
+        <p>
+          نظام تسجيل الدخول وحسابات العملاء
+          سيتم تفعيله في المرحلة التالية من سِمة.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button full-width"
+          onclick="closeModal()"
+        >
+          تمام
+        </button>
+
+      `);
+
+    }
+
+
+    function showOrdersMessage() {
+
+      openModal(`
+
+        <div class="modal-icon">
+          📦
+        </div>
+
+        <h2>
+          طلباتي
+        </h2>
+
+        <p>
+          بعد تفعيل الحسابات،
+          ستظهر طلباتك وحالتها هنا.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button full-width"
+          onclick="closeModal()"
+        >
+          إغلاق
+        </button>
+
+      `);
+
+    }
+
+
+    function showSavedDesigns() {
+
+      openModal(`
+
+        <div class="modal-icon">
+          ♡
+        </div>
+
+        <h2>
+          تصاميمك المحفوظة
+        </h2>
+
+        <p>
+          ميزة حفظ التصاميم مرتبطة بالحساب،
+          وسيتم تفعيلها مع نظام الحسابات.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button full-width"
+          onclick="closeModal()"
+        >
+          إغلاق
+        </button>
+
+      `);
+
+    }
+
+
+    function showSocialMessage(platform) {
+
+      openModal(`
+
+        <div class="modal-icon">
+          ✦
+        </div>
+
+        <h2>
+          ${platform}
+        </h2>
+
+        <p>
+          حسابات سِمة الرسمية سيتم إضافتها هنا عند تجهيزها.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button full-width"
+          onclick="closeModal()"
+        >
+          إغلاق
+        </button>
+
+      `);
+
+    }
+
+
+    function submitDesignForSale() {
+
+      openModal(`
+
+        <div class="modal-icon">
+          ✦
+        </div>
+
+        <h2>
+          اعرض تصميمك
+        </h2>
+
+        <p>
+          صمّم فكرتك أولًا، وبعدها نضيف نظام إرسال التصميم
+          للمراجعة وعرضه في المتجر.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button full-width"
+          onclick="closeModal(); showPage('designer')"
+        >
+          ابدأ التصميم
+        </button>
+
+      `);
+
+    }
+
+
+    /* Current year */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+
+        const yearElement =
+          document.getElementById("current-year");
+
+        if (yearElement) {
+
+          yearElement.textContent =
+            new Date().getFullYear();
+
+        }
+
+
+        setTimeout(
+          function () {
+
+            const loadingScreen =
+              document.getElementById("loading-screen");
+
+            if (loadingScreen) {
+
+              loadingScreen.classList.add(
+                "loaded"
+              );
+
+            }
+
+          },
+          500
+        );
+
+      }
+    );
+
+  </script>
 
 </body>
+
 </html>
