@@ -2,10 +2,12 @@
 
 /* =========================================================
    SIMA 3.0
-   Main Application
+   MAIN APPLICATION
    ========================================================= */
 
-/* ================= PRODUCTS ================= */
+/* =========================================================
+   PRODUCTS
+========================================================= */
 
 const products = [
     {
@@ -49,32 +51,38 @@ const products = [
         name: "Minimal",
         category: "تيشيرتات",
         price: 75,
-        color: "#111111"
+        color: "#111111",
+        description: "تصميم بسيط وأنيق للاستخدام اليومي."
     },
     {
         id: 6,
         name: "Class of 2026",
         category: "تخرج",
         price: 95,
-        color: "#555555"
+        color: "#555555",
+        description: "تصميم تخرج عصري لدفعة 2026."
     },
     {
         id: 7,
         name: "يومنا",
         category: "مناسبات",
         price: 85,
-        color: "#222222"
+        color: "#222222",
+        description: "تصميم للمناسبات والذكريات الخاصة."
     },
     {
         id: 8,
         name: "Squad",
         category: "مجموعات",
         price: 89,
-        color: "#444444"
+        color: "#444444",
+        description: "تصميم مناسب للأصدقاء والمجموعات."
     }
 ];
 
-/* ================= STATE ================= */
+/* =========================================================
+   STATE
+========================================================= */
 
 let cart = [];
 let currentPage = "home";
@@ -82,14 +90,16 @@ let currentProduct = null;
 
 let designerState = {
     productType: "تيشيرت",
-    color: "#f5f5f5",
-    size: "M",
+    color: "#151515",
+    size: "S",
     text: "",
     textSize: 28,
     uploadedImage: null
 };
 
-/* ================= STORAGE ================= */
+/* =========================================================
+   STORAGE
+========================================================= */
 
 function saveCart() {
     try {
@@ -98,7 +108,7 @@ function saveCart() {
             JSON.stringify(cart)
         );
     } catch (error) {
-        console.warn("Unable to save cart:", error);
+        console.warn("Cart save error:", error);
     }
 }
 
@@ -118,26 +128,24 @@ function loadCart() {
             : [];
     } catch (error) {
         cart = [];
-        console.warn("Unable to load cart:", error);
+        console.warn("Cart load error:", error);
     }
 }
 
 function saveDesignerState() {
     try {
-        const stateToSave = {
-            productType: designerState.productType,
-            color: designerState.color,
-            size: designerState.size,
-            text: designerState.text,
-            textSize: designerState.textSize
-        };
-
         localStorage.setItem(
             "sima_designer",
-            JSON.stringify(stateToSave)
+            JSON.stringify({
+                productType: designerState.productType,
+                color: designerState.color,
+                size: designerState.size,
+                text: designerState.text,
+                textSize: designerState.textSize
+            })
         );
     } catch (error) {
-        console.warn("Unable to save designer:", error);
+        console.warn("Designer save error:", error);
     }
 }
 
@@ -150,21 +158,23 @@ function loadDesignerState() {
 
         const parsed = JSON.parse(saved);
 
-        if (parsed && typeof parsed === "object") {
+        if (
+            parsed &&
+            typeof parsed === "object"
+        ) {
             designerState = {
                 ...designerState,
                 ...parsed
             };
         }
     } catch (error) {
-        console.warn(
-            "Unable to load designer:",
-            error
-        );
+        console.warn("Designer load error:", error);
     }
 }
 
-/* ================= NAVIGATION ================= */
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
 function showPage(pageName) {
     const pages =
@@ -181,7 +191,8 @@ function showPage(pageName) {
 
     if (!target) {
         console.warn(
-            `Page "${pageName}" does not exist.`
+            "Page not found:",
+            pageName
         );
         return;
     }
@@ -189,6 +200,15 @@ function showPage(pageName) {
     target.classList.add("active");
 
     currentPage = pageName;
+
+    document
+        .querySelectorAll(".nav-link")
+        .forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.page === pageName
+            );
+        });
 
     window.scrollTo({
         top: 0,
@@ -201,6 +221,10 @@ function showPage(pageName) {
 
     if (pageName === "shop") {
         renderShopProducts();
+    }
+
+    if (pageName === "product") {
+        updateProductPage();
     }
 
     if (pageName === "cart") {
@@ -216,13 +240,16 @@ function showPage(pageName) {
     }
 }
 
-/* ================= PRODUCT CARD ================= */
+/* =========================================================
+   PRODUCT CARDS
+========================================================= */
 
 function createProductCard(product) {
     return `
         <article class="product-card">
 
             <button
+                type="button"
                 class="product-image"
                 onclick="openProduct(${product.id})"
                 aria-label="${escapeHTML(product.name)}"
@@ -254,7 +281,8 @@ function createProductCard(product) {
                     </strong>
 
                     <button
-                        onclick="addToCart(${product.id})"
+                        type="button"
+                        onclick="event.stopPropagation(); addToCart(${product.id}, 'M')"
                     >
                         أضف للسلة
                     </button>
@@ -267,7 +295,9 @@ function createProductCard(product) {
     `;
 }
 
-/* ================= HOME PRODUCTS ================= */
+/* =========================================================
+   HOME
+========================================================= */
 
 function renderFeaturedProducts() {
     const container =
@@ -288,7 +318,9 @@ function renderFeaturedProducts() {
             .join("");
 }
 
-/* ================= SHOP ================= */
+/* =========================================================
+   SHOP
+========================================================= */
 
 function renderShopProducts(list = products) {
     const container =
@@ -298,20 +330,23 @@ function renderShopProducts(list = products) {
 
     if (!container) return;
 
-    if (!list.length) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <h3>
-                    ما لقينا تصميم بهذا البحث
-                </h3>
+    const empty =
+        document.getElementById(
+            "shop-empty"
+        );
 
-                <p>
-                    جرّب كلمة بحث مختلفة أو تصنيف آخر.
-                </p>
-            </div>
-        `;
+    if (!list.length) {
+        container.innerHTML = "";
+
+        if (empty) {
+            empty.classList.remove("hidden");
+        }
 
         return;
+    }
+
+    if (empty) {
+        empty.classList.add("hidden");
     }
 
     container.innerHTML =
@@ -320,34 +355,45 @@ function renderShopProducts(list = products) {
             .join("");
 }
 
-/* ================= SEARCH ================= */
+/* =========================================================
+   SEARCH
+========================================================= */
 
-function searchProducts() {
+function searchProducts(value) {
     const input =
         document.getElementById(
             "search-input"
         );
 
-    if (!input) return;
-
     const search =
-        input.value
+        String(
+            value !== undefined
+                ? value
+                : input
+                    ? input.value
+                    : ""
+        )
             .trim()
             .toLowerCase();
+
+    if (!search) {
+        renderShopProducts(products);
+        return;
+    }
 
     const filtered =
         products.filter(product => {
 
             const name =
-                product.name
+                String(product.name || "")
                     .toLowerCase();
 
             const category =
-                product.category
+                String(product.category || "")
                     .toLowerCase();
 
             const description =
-                product.description
+                String(product.description || "")
                     .toLowerCase();
 
             return (
@@ -373,15 +419,20 @@ function clearSearch() {
     renderShopProducts(products);
 }
 
-/* ================= CATEGORY ================= */
+/* =========================================================
+   CATEGORY
+========================================================= */
 
 function filterCategory(category) {
+
+    showPage("shop");
+
     let filtered = products;
 
     if (
         category &&
-        category !== "all" &&
-        category !== "الكل"
+        category !== "الكل" &&
+        category !== "all"
     ) {
         filtered =
             products.filter(
@@ -390,63 +441,61 @@ function filterCategory(category) {
             );
     }
 
+    document
+        .querySelectorAll(
+            ".filter-button"
+        )
+        .forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.category === category ||
+                (
+                    category === "الكل" &&
+                    button.dataset.category === "الكل"
+                )
+            );
+        });
+
     renderShopProducts(filtered);
 }
 
-function filterProducts() {
-    const filter =
-        document.getElementById(
-            "category-filter"
-        );
+/* =========================================================
+   SORT
+========================================================= */
 
-    if (!filter) {
-        renderShopProducts(products);
-        return;
-    }
+function sortProducts(value) {
 
-    filterCategory(filter.value);
-}
-
-function openCategory(category) {
-    showPage("shop");
-
-    filterCategory(category);
-}
-
-/* ================= SORT ================= */
-
-function sortProducts() {
     const select =
         document.getElementById(
-            "sort-select"
+            "sort-products"
         );
 
-    if (!select) return;
-
-    const value = select.value;
+    const selected =
+        value ||
+        (select ? select.value : "default");
 
     let sorted =
         [...products];
 
-    if (value === "price-low") {
+    if (selected === "price-low") {
         sorted.sort(
             (a, b) =>
                 a.price - b.price
         );
     }
 
-    if (value === "price-high") {
+    if (selected === "price-high") {
         sorted.sort(
             (a, b) =>
                 b.price - a.price
         );
     }
 
-    if (value === "name") {
+    if (selected === "name") {
         sorted.sort(
             (a, b) =>
-                a.name.localeCompare(
-                    b.name,
+                String(a.name).localeCompare(
+                    String(b.name),
                     "ar"
                 )
         );
@@ -455,39 +504,22 @@ function sortProducts() {
     renderShopProducts(sorted);
 }
 
-/* ================= CATEGORY BUTTONS ================= */
-
-function setupCategoryButtons() {
-    const buttons =
-        document.querySelectorAll(
-            "[data-category]"
-        );
-
-    buttons.forEach(button => {
-        button.addEventListener(
-            "click",
-            () => {
-                const category =
-                    button.dataset.category;
-
-                filterCategory(category);
-
-                showPage("shop");
-            }
-        );
-    });
-}
-
-/* ================= PRODUCT DETAILS ================= */
+/* =========================================================
+   PRODUCT DETAILS
+========================================================= */
 
 function openProduct(productId) {
+
     const product =
         products.find(
             item =>
                 item.id === Number(productId)
         );
 
-    if (!product) return;
+    if (!product) {
+        showToast("المنتج غير موجود");
+        return;
+    }
 
     currentProduct = product;
 
@@ -542,39 +574,23 @@ function openProduct(productId) {
 
                     <select id="detail-size">
 
-                        <option value="XS">
-                            XS
-                        </option>
-
-                        <option value="S">
-                            S
-                        </option>
-
-                        <option value="M" selected>
-                            M
-                        </option>
-
-                        <option value="L">
-                            L
-                        </option>
-
-                        <option value="XL">
-                            XL
-                        </option>
-
-                        <option value="XXL">
-                            XXL
-                        </option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M" selected>M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
 
                     </select>
 
                 </div>
 
                 <button
+                    type="button"
                     class="primary-button full-button"
                     onclick="addProductFromDetails()"
                 >
-                    أضف للسلة
+                    🛒 أضف للسلة
                 </button>
 
             </div>
@@ -585,8 +601,18 @@ function openProduct(productId) {
     showPage("product");
 }
 
+function updateProductPage() {
+    if (currentProduct) {
+        openProduct(currentProduct.id);
+    }
+}
+
 function addProductFromDetails() {
-    if (!currentProduct) return;
+
+    if (!currentProduct) {
+        showToast("اختر منتج أولًا");
+        return;
+    }
 
     const sizeElement =
         document.getElementById(
@@ -604,45 +630,64 @@ function addProductFromDetails() {
     );
 }
 
-/* ================= CART ================= */
+/* =========================================================
+   CART - ADD
+========================================================= */
 
 function addToCart(
     productId,
     size = "M"
 ) {
+
     const product =
         products.find(
             item =>
                 item.id === Number(productId)
         );
 
-    if (!product) return;
+    if (!product) {
+        showToast("المنتج غير موجود");
+        return;
+    }
 
     const existing =
         cart.find(
             item =>
                 item.productId === product.id &&
-                item.size === size
+                item.size === size &&
+                item.custom !== true
         );
 
     if (existing) {
-        existing.quantity += 1;
+
+        existing.quantity =
+            Number(existing.quantity || 0) + 1;
+
     } else {
+
         cart.push({
+
             cartId:
-                `${product.id}-${size}-${Date.now()}`,
+                `product-${product.id}-${size}-${Date.now()}`,
+
             productId:
                 product.id,
+
             name:
                 product.name,
+
             price:
-                product.price,
+                Number(product.price),
+
             color:
                 product.color,
+
             size:
                 size,
+
             quantity:
                 1,
+
             custom:
                 false
         });
@@ -652,11 +697,78 @@ function addToCart(
     updateCartCount();
 
     showToast(
-        "تمت إضافة المنتج للسلة"
+        "تمت إضافة المنتج للسلة ✓"
     );
 }
 
+/* =========================================================
+   CART - CUSTOM DESIGN
+========================================================= */
+
+function addCustomDesignToCart() {
+
+    const price =
+        designerState.productType === "هودي"
+            ? 139
+            : 99;
+
+    const text =
+        String(
+            designerState.text || ""
+        ).trim();
+
+    cart.push({
+
+        cartId:
+            `custom-${Date.now()}`,
+
+        productId:
+            "custom",
+
+        name:
+            text
+                ? `تصميم مخصص: ${text}`
+                : `تصميم مخصص ${designerState.productType}`,
+
+        price:
+            price,
+
+        color:
+            designerState.color,
+
+        size:
+            designerState.size,
+
+        quantity:
+            1,
+
+        custom:
+            true,
+
+        customText:
+            text,
+
+        productType:
+            designerState.productType,
+
+        uploadedImage:
+            designerState.uploadedImage
+    });
+
+    saveCart();
+    updateCartCount();
+
+    showToast(
+        "تمت إضافة تصميمك للسلة ✓"
+    );
+}
+
+/* =========================================================
+   CART - REMOVE
+========================================================= */
+
 function removeFromCart(cartId) {
+
     cart =
         cart.filter(
             item =>
@@ -672,7 +784,12 @@ function removeFromCart(cartId) {
     );
 }
 
+/* =========================================================
+   CART - INCREASE
+========================================================= */
+
 function increaseCartItem(cartId) {
+
     const item =
         cart.find(
             product =>
@@ -681,14 +798,20 @@ function increaseCartItem(cartId) {
 
     if (!item) return;
 
-    item.quantity += 1;
+    item.quantity =
+        Number(item.quantity || 0) + 1;
 
     saveCart();
     updateCartCount();
     renderCart();
 }
 
+/* =========================================================
+   CART - DECREASE
+========================================================= */
+
 function decreaseCartItem(cartId) {
+
     const item =
         cart.find(
             product =>
@@ -697,9 +820,12 @@ function decreaseCartItem(cartId) {
 
     if (!item) return;
 
-    if (item.quantity > 1) {
+    if (Number(item.quantity) > 1) {
+
         item.quantity -= 1;
+
     } else {
+
         cart =
             cart.filter(
                 product =>
@@ -712,154 +838,145 @@ function decreaseCartItem(cartId) {
     renderCart();
 }
 
-/* ================= CART RENDER ================= */
+/* =========================================================
+   CART RENDER
+========================================================= */
 
 function renderCart() {
+
     const container =
         document.getElementById(
             "cart-items"
+        );
+
+    const empty =
+        document.getElementById(
+            "cart-empty"
         );
 
     if (!container) return;
 
     if (!cart.length) {
 
-        container.innerHTML = `
-            <div class="empty-state">
+        container.innerHTML = "";
 
-                <h3>
-                    السلة فاضية
-                </h3>
-
-                <p>
-                    أضف أول تصميم لك وابدأ طلبك.
-                </p>
-
-                <br>
-
-                <button
-                    class="primary-button"
-                    onclick="showPage('shop')"
-                >
-                    تصفح المتجر
-                </button>
-
-            </div>
-        `;
+        if (empty) {
+            empty.classList.remove("hidden");
+        }
 
         updateCartTotals();
+        updateCartCount();
 
         return;
     }
 
+    if (empty) {
+        empty.classList.add("hidden");
+    }
+
     container.innerHTML =
-        cart
-            .map(item => {
+        cart.map(item => {
 
-                const imageColor =
-                    item.color ||
-                    "#171717";
+            const color =
+                item.color || "#171717";
 
-                return `
-                    <div class="cart-item">
+            const itemTotal =
+                Number(item.price || 0) *
+                Number(item.quantity || 0);
 
-                        <div class="cart-item-image">
+            return `
+                <div class="cart-item">
 
-                            <div
-                                class="product-shirt"
-                                style="
-                                    background:${imageColor};
-                                "
-                            >
-                                <span>
-                                    سِمة
-                                </span>
-                            </div>
+                    <div class="cart-item-image">
 
-                        </div>
-
-                        <div class="cart-item-info">
-
-                            <h3>
-                                ${escapeHTML(item.name)}
-                            </h3>
-
-                            <p>
-                                المقاس:
-                                ${escapeHTML(item.size)}
-                            </p>
-
-                            <div
-                                class="cart-quantity"
-                                style="
-                                    display:flex;
-                                    align-items:center;
-                                    gap:8px;
-                                    margin-top:8px;
-                                "
-                            >
-
-                                <button
-                                    type="button"
-                                    onclick="decreaseCartItem('${item.cartId}')"
-                                    style="
-                                        width:32px;
-                                        height:32px;
-                                        border-radius:8px;
-                                        background:#f1f1f1;
-                                    "
-                                >
-                                    −
-                                </button>
-
-                                <strong>
-                                    ${item.quantity}
-                                </strong>
-
-                                <button
-                                    type="button"
-                                    onclick="increaseCartItem('${item.cartId}')"
-                                    style="
-                                        width:32px;
-                                        height:32px;
-                                        border-radius:8px;
-                                        background:#f1f1f1;
-                                    "
-                                >
-                                    +
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                        <div class="cart-item-price">
-
-                            ${formatPrice(
-                                item.price *
-                                item.quantity
-                            )}
-
-                        </div>
-
-                        <button
-                            class="remove-button"
-                            onclick="removeFromCart('${item.cartId}')"
+                        <div
+                            class="product-shirt"
+                            style="
+                                background:${color};
+                            "
                         >
-                            حذف
-                        </button>
+                            <span>سِمة</span>
+                        </div>
 
                     </div>
-                `;
-            })
-            .join("");
+
+                    <div class="cart-item-info">
+
+                        <h3>
+                            ${escapeHTML(item.name)}
+                        </h3>
+
+                        <p>
+                            المقاس:
+                            ${escapeHTML(item.size || "M")}
+                        </p>
+
+                        ${
+                            item.custom
+                                ? `
+                                    <p>
+                                        تصميم مخصص
+                                        ${
+                                            item.productType
+                                                ? `· ${escapeHTML(item.productType)}`
+                                                : ""
+                                        }
+                                    </p>
+                                `
+                                : ""
+                        }
+
+                        <div class="cart-quantity">
+
+                            <button
+                                type="button"
+                                onclick="decreaseCartItem('${escapeHTML(item.cartId)}')"
+                            >
+                                −
+                            </button>
+
+                            <strong>
+                                ${item.quantity}
+                            </strong>
+
+                            <button
+                                type="button"
+                                onclick="increaseCartItem('${escapeHTML(item.cartId)}')"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="cart-item-price">
+                        ${formatPrice(itemTotal)}
+                    </div>
+
+                    <button
+                        type="button"
+                        class="remove-button"
+                        onclick="removeFromCart('${escapeHTML(item.cartId)}')"
+                    >
+                        حذف
+                    </button>
+
+                </div>
+            `;
+
+        }).join("");
 
     updateCartTotals();
+    updateCartCount();
 }
 
-/* ================= CART TOTALS ================= */
+/* =========================================================
+   CART TOTALS
+========================================================= */
 
 function calculateSubtotal() {
+
     return cart.reduce(
         (total, item) => {
 
@@ -873,12 +990,14 @@ function calculateSubtotal() {
                 total +
                 price * quantity
             );
+
         },
         0
     );
 }
 
 function updateCartTotals() {
+
     const subtotal =
         calculateSubtotal();
 
@@ -903,9 +1022,12 @@ function updateCartTotals() {
     }
 }
 
-/* ================= CART COUNT ================= */
+/* =========================================================
+   CART COUNT
+========================================================= */
 
 function updateCartCount() {
+
     const count =
         cart.reduce(
             (total, item) =>
@@ -921,32 +1043,33 @@ function updateCartCount() {
 
     if (element) {
         element.textContent =
-            count;
+            String(count);
     }
 }
 
-/* ================= CUSTOM DESIGNER ================= */
+/* =========================================================
+   DESIGNER
+========================================================= */
 
 function selectProductType(type) {
+
     designerState.productType =
         type;
 
-    const buttons =
-        document.querySelectorAll(
+    document
+        .querySelectorAll(
             "[data-product-type]"
-        );
+        )
+        .forEach(button => {
 
-    buttons.forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.productType === type
+            );
 
-        button.classList.toggle(
-            "active",
-            button.dataset.productType === type
-        );
-
-    });
+        });
 
     saveDesignerState();
-
     updateDesignerPreview();
 
     showToast(
@@ -957,24 +1080,34 @@ function selectProductType(type) {
 function selectShirtColor(color) {
 
     const colors = {
+
         white: "#f5f5f5",
         black: "#151515",
         gray: "#777777",
-        green: "#183c32",
         beige: "#d9cbb8",
-        navy: "#1d2c46"
+        green: "#183c32",
+        blue: "#1d2c46"
     };
 
-    const selected =
+    designerState.color =
         colors[color] ||
         color ||
-        "#f5f5f5";
+        "#151515";
 
-    designerState.color =
-        selected;
+    document
+        .querySelectorAll(
+            "[data-color]"
+        )
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.color === color
+            );
+
+        });
 
     saveDesignerState();
-
     updateDesignerPreview();
 }
 
@@ -983,45 +1116,61 @@ function changeShirtColor(color) {
 }
 
 function selectSize(size) {
+
     designerState.size =
         size;
 
-    const buttons =
-        document.querySelectorAll(
+    document
+        .querySelectorAll(
             "[data-size]"
-        );
+        )
+        .forEach(button => {
 
-    buttons.forEach(button => {
-        button.classList.toggle(
-            "active",
-            button.dataset.size === size
-        );
-    });
+            button.classList.toggle(
+                "active",
+                button.dataset.size === size
+            );
+
+        });
 
     saveDesignerState();
-
     updateDesignerPreview();
 }
 
 function updateDesignText(value) {
-    designerState.text =
-        value.trim();
 
-    const textElement =
+    designerState.text =
+        String(value || "").trim();
+
+    const text =
         document.getElementById(
             "shirt-text"
         );
 
-    if (textElement) {
-        textElement.textContent =
+    if (text) {
+
+        text.textContent =
             designerState.text ||
             "سِمة";
     }
 
+    const counter =
+        document.getElementById(
+            "text-counter"
+        );
+
+    if (counter) {
+
+        counter.textContent =
+            `${designerState.text.length}/35`;
+    }
+
     saveDesignerState();
+    updateDesignerPreview();
 }
 
 function updateTextSize(value) {
+
     const size =
         Number(value);
 
@@ -1034,13 +1183,16 @@ function updateTextSize(value) {
             size;
     }
 
-    updateDesignerPreview();
     saveDesignerState();
+    updateDesignerPreview();
 }
 
-/* ================= DESIGNER PREVIEW ================= */
+/* =========================================================
+   DESIGNER PREVIEW
+========================================================= */
 
 function updateDesignerPreview() {
+
     const shirt =
         document.getElementById(
             "design-shirt"
@@ -1071,6 +1223,57 @@ function updateDesignerPreview() {
             );
     }
 
+    document
+        .querySelectorAll(
+            "[data-product-type]"
+        )
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.productType ===
+                designerState.productType
+            );
+
+        });
+
+    document
+        .querySelectorAll(
+            "[data-size]"
+        )
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.size ===
+                designerState.size
+            );
+
+        });
+
+    document
+        .querySelectorAll(
+            "[data-color]"
+        )
+        .forEach(button => {
+
+            const map = {
+                black: "#151515",
+                white: "#f5f5f5",
+                gray: "#777777",
+                beige: "#d9cbb8",
+                green: "#183c32",
+                blue: "#1d2c46"
+            };
+
+            button.classList.toggle(
+                "active",
+                map[button.dataset.color] ===
+                designerState.color
+            );
+
+        });
+
     const sizeLabel =
         document.getElementById(
             "selected-size"
@@ -1081,28 +1284,71 @@ function updateDesignerPreview() {
             designerState.size;
     }
 
-    const productLabel =
+    const typeLabel =
         document.getElementById(
             "selected-product-type"
         );
 
-    if (productLabel) {
-        productLabel.textContent =
+    if (typeLabel) {
+        typeLabel.textContent =
             designerState.productType;
+    }
+
+    const price =
+        document.getElementById(
+            "designer-price"
+        );
+
+    if (price) {
+
+        price.textContent =
+            designerState.productType === "هودي"
+                ? "139"
+                : "99";
+    }
+
+    const image =
+        document.getElementById(
+            "design-image"
+        );
+
+    if (image) {
+
+        if (designerState.uploadedImage) {
+
+            image.src =
+                designerState.uploadedImage;
+
+            image.style.display =
+                "block";
+
+        } else {
+
+            image.src = "";
+
+            image.style.display =
+                "none";
+        }
     }
 }
 
-/* ================= DESIGN IMAGE UPLOAD ================= */
+/* =========================================================
+   IMAGE UPLOAD
+========================================================= */
 
 function handleDesignUpload(event) {
 
     const file =
-        event.target.files &&
-        event.target.files[0];
+        event &&
+        event.target &&
+        event.target.files
+            ? event.target.files[0]
+            : null;
 
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
+
         showToast(
             "فضلاً اختر صورة صحيحة"
         );
@@ -1111,10 +1357,11 @@ function handleDesignUpload(event) {
         return;
     }
 
-    const maxSize =
-        5 * 1024 * 1024;
+    if (
+        file.size >
+        5 * 1024 * 1024
+    ) {
 
-    if (file.size > maxSize) {
         showToast(
             "حجم الصورة يجب أن يكون أقل من 5MB"
         );
@@ -1131,24 +1378,17 @@ function handleDesignUpload(event) {
         designerState.uploadedImage =
             reader.result;
 
-        const preview =
-            document.getElementById(
-                "design-image"
-            );
-
-        if (preview) {
-
-            preview.src =
-                reader.result;
-
-            preview.style.display =
-                "block";
-        }
-
         updateDesignerPreview();
 
         showToast(
-            "تم رفع التصميم"
+            "تم رفع التصميم ✓"
+        );
+    };
+
+    reader.onerror = function () {
+
+        showToast(
+            "تعذر قراءة الصورة"
         );
     };
 
@@ -1160,14 +1400,16 @@ function removeUploadedDesign() {
     designerState.uploadedImage =
         null;
 
-    const preview =
+    const image =
         document.getElementById(
             "design-image"
         );
 
-    if (preview) {
-        preview.src = "";
-        preview.style.display =
+    if (image) {
+
+        image.src = "";
+
+        image.style.display =
             "none";
     }
 
@@ -1181,125 +1423,11 @@ function removeUploadedDesign() {
     }
 
     updateDesignerPreview();
-
-    showToast(
-        "تم حذف التصميم"
-    );
 }
 
-/* ================= CUSTOM DESIGN CART ================= */
-
-function addCustomDesignToCart() {
-
-    const text =
-        designerState.text.trim();
-
-    cart.push({
-
-        cartId:
-            `custom-${Date.now()}`,
-
-        productId:
-            "custom",
-
-        name:
-            text
-                ? `تصميم مخصص: ${text}`
-                : `تصميم مخصص ${designerState.productType}`,
-
-        price:
-            designerState.productType === "هودي"
-                ? 139
-                : 99,
-
-        color:
-            designerState.color,
-
-        size:
-            designerState.size,
-
-        quantity:
-            1,
-
-        custom:
-            true,
-
-        customText:
-            text,
-
-        productType:
-            designerState.productType,
-
-        uploadedImage:
-            designerState.uploadedImage
-    });
-
-    saveCart();
-
-    updateCartCount();
-
-    showToast(
-        "تمت إضافة تصميمك للسلة"
-    );
-}
-
-/* ================= DESIGN SAVE ================= */
-
-function saveDesign() {
-
-    const savedDesigns =
-        getSavedDesigns();
-
-    const design = {
-
-        id:
-            `design-${Date.now()}`,
-
-        productType:
-            designerState.productType,
-
-        color:
-            designerState.color,
-
-        size:
-            designerState.size,
-
-        text:
-            designerState.text,
-
-        textSize:
-            designerState.textSize,
-
-        uploadedImage:
-            designerState.uploadedImage,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-    savedDesigns.push(design);
-
-    try {
-        localStorage.setItem(
-            "sima_saved_designs",
-            JSON.stringify(savedDesigns)
-        );
-
-        showToast(
-            "تم حفظ التصميم"
-        );
-    } catch (error) {
-
-        console.warn(
-            "Unable to save design:",
-            error
-        );
-
-        showToast(
-            "تعذر حفظ التصميم"
-        );
-    }
-}
+/* =========================================================
+   SAVE DESIGN
+========================================================= */
 
 function getSavedDesigns() {
 
@@ -1325,11 +1453,71 @@ function getSavedDesigns() {
     }
 }
 
-/* ================= SELL DESIGN ================= */
+function saveDesign() {
 
-function submitDesignForSale() {
+    const designs =
+        getSavedDesigns();
 
-    const design = {
+    designs.push({
+
+        id:
+            `design-${Date.now()}`,
+
+        productType:
+            designerState.productType,
+
+        color:
+            designerState.color,
+
+        size:
+            designerState.size,
+
+        text:
+            designerState.text,
+
+        textSize:
+            designerState.textSize,
+
+        uploadedImage:
+            designerState.uploadedImage,
+
+        createdAt:
+            new Date().toISOString()
+    });
+
+    try {
+
+        localStorage.setItem(
+            "sima_saved_designs",
+            JSON.stringify(designs)
+        );
+
+        showToast(
+            "تم حفظ التصميم ✓"
+        );
+
+    } catch (error) {
+
+        showToast(
+            "تعذر حفظ التصميم"
+        );
+    }
+}
+
+/* =========================================================
+   SELL DESIGN
+========================================================= */
+
+function submitDesignForSaleFromApp() {
+
+    const submissions =
+        JSON.parse(
+            localStorage.getItem(
+                "sima_submissions"
+            ) || "[]"
+        );
+
+    submissions.push({
 
         id:
             `submission-${Date.now()}`,
@@ -1354,54 +1542,30 @@ function submitDesignForSale() {
 
         createdAt:
             new Date().toISOString()
-    };
+    });
 
-    try {
+    localStorage.setItem(
+        "sima_submissions",
+        JSON.stringify(submissions)
+    );
 
-        const submissions =
-            JSON.parse(
-                localStorage.getItem(
-                    "sima_submissions"
-                ) || "[]"
-            );
-
-        submissions.push(design);
-
-        localStorage.setItem(
-            "sima_submissions",
-            JSON.stringify(submissions)
-        );
-
-        showToast(
-            "تم إرسال التصميم للمراجعة"
-        );
-
-    } catch (error) {
-
-        console.warn(
-            "Unable to submit design:",
-            error
-        );
-
-        showToast(
-            "تعذر إرسال التصميم"
-        );
-    }
+    showToast(
+        "تم إرسال التصميم للمراجعة ✓"
+    );
 }
 
-/* ================= AI DESIGN ================= */
+/* =========================================================
+   AI DESIGN
+========================================================= */
 
 function openAIDesigner() {
 
-    const message =
+    const idea =
         prompt(
-            "اكتب وصف التصميم الذي تريده، مثال: تيشيرت أسود بتصميم تخرج 2026 باللون الأخضر"
+            "اكتب وصف التصميم الذي تريده"
         );
 
-    if (!message) return;
-
-    designerState.text =
-        message.trim();
+    if (!idea) return;
 
     const input =
         document.getElementById(
@@ -1410,19 +1574,68 @@ function openAIDesigner() {
 
     if (input) {
         input.value =
-            message.trim();
+            idea;
     }
 
-    updateDesignText(
-        message.trim()
-    );
+    updateDesignText(idea);
 
     showToast(
-        "تم تجهيز فكرتك داخل المصمم"
+        "تم تجهيز فكرتك داخل المصمم ✓"
     );
 }
 
-/* ================= CHECKOUT ================= */
+/* =========================================================
+   RESET DESIGNER
+========================================================= */
+
+function resetDesigner() {
+
+    designerState = {
+
+        productType:
+            "تيشيرت",
+
+        color:
+            "#151515",
+
+        size:
+            "S",
+
+        text:
+            "",
+
+        textSize:
+            28,
+
+        uploadedImage:
+            null
+    };
+
+    localStorage.removeItem(
+        "sima_designer"
+    );
+
+    const input =
+        document.getElementById(
+            "custom-text"
+        );
+
+    if (input) {
+        input.value = "";
+    }
+
+    removeUploadedDesign();
+
+    updateDesignerPreview();
+
+    showToast(
+        "تم إعادة ضبط التصميم"
+    );
+}
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
 
 function goToCheckout() {
 
@@ -1440,24 +1653,33 @@ function goToCheckout() {
 
 function renderCheckout() {
 
-    const itemsContainer =
+    const container =
         document.getElementById(
             "checkout-summary-items"
-        ) ||
-        document.getElementById(
-            "checkout-items"
         );
 
-    const totalElement =
-        document.getElementById(
-            "checkout-total"
-        );
+    if (!container) return;
 
-    if (!itemsContainer) return;
+    if (!cart.length) {
 
-    itemsContainer.innerHTML =
-        cart
-            .map(item => `
+        container.innerHTML = `
+            <p>
+                السلة فاضية.
+            </p>
+        `;
+
+        updateCheckoutTotals();
+        return;
+    }
+
+    container.innerHTML =
+        cart.map(item => {
+
+            const total =
+                Number(item.price || 0) *
+                Number(item.quantity || 0);
+
+            return `
                 <div class="summary-row">
 
                     <span>
@@ -1466,26 +1688,46 @@ function renderCheckout() {
                     </span>
 
                     <strong>
-                        ${formatPrice(
-                            item.price *
-                            item.quantity
-                        )}
+                        ${formatPrice(total)}
                     </strong>
 
                 </div>
-            `)
-            .join("");
+            `;
+
+        }).join("");
+
+    updateCheckoutTotals();
+}
+
+function updateCheckoutTotals() {
+
+    const total =
+        calculateSubtotal();
+
+    const subtotal =
+        document.getElementById(
+            "checkout-subtotal"
+        );
+
+    const totalElement =
+        document.getElementById(
+            "checkout-total"
+        );
+
+    if (subtotal) {
+        subtotal.textContent =
+            formatPrice(total);
+    }
 
     if (totalElement) {
-
         totalElement.textContent =
-            formatPrice(
-                calculateSubtotal()
-            );
+            formatPrice(total);
     }
 }
 
-/* ================= ORDER ================= */
+/* =========================================================
+   ORDER
+========================================================= */
 
 function submitOrder(event) {
 
@@ -1543,17 +1785,10 @@ function submitOrder(event) {
 
         customer: {
 
-            name:
-                name,
-
-            phone:
-                phone,
-
-            city:
-                city,
-
-            address:
-                address
+            name,
+            phone,
+            city,
+            address
         },
 
         items:
@@ -1572,11 +1807,7 @@ function submitOrder(event) {
     try {
 
         const orders =
-            JSON.parse(
-                localStorage.getItem(
-                    "sima_orders"
-                ) || "[]"
-            );
+            getOrders();
 
         orders.push(order);
 
@@ -1586,164 +1817,20 @@ function submitOrder(event) {
         );
 
         showToast(
-            "تم تجهيز الطلب بنجاح"
+            "تم تجهيز الطلب بنجاح ✓"
         );
 
         /*
-            Paylink سيتم ربطه هنا لاحقًا
-            عن طريق Backend آمن.
+          Paylink سيتم ربطه لاحقًا
+          عبر Backend آمن.
         */
 
     } catch (error) {
-
-        console.warn(
-            "Unable to save order:",
-            error
-        );
 
         showToast(
             "تعذر حفظ الطلب"
         );
     }
-}
-
-/* ================= ACCOUNT ================= */
-
-function showLoginMessage() {
-
-    showModal(
-        "تسجيل الدخول",
-        `
-            <p>
-                تسجيل الدخول بالحساب الحقيقي سيتم ربطه
-                مع Supabase في المرحلة القادمة.
-            </p>
-
-            <button
-                class="primary-button full-button"
-                onclick="closeModal()"
-            >
-                فهمت
-            </button>
-        `
-    );
-}
-
-function showOrdersMessage() {
-
-    const orders =
-        getOrders();
-
-    if (!orders.length) {
-
-        showModal(
-            "طلباتي",
-            `
-                <p>
-                    ما عندك طلبات حالياً.
-                </p>
-
-                <button
-                    class="primary-button full-button"
-                    onclick="closeModal()"
-                >
-                    إغلاق
-                </button>
-            `
-        );
-
-        return;
-    }
-
-    const html =
-        orders
-            .map(
-                order => `
-                    <div
-                        style="
-                            padding:15px 0;
-                            border-bottom:1px solid #eee;
-                        "
-                    >
-                        <strong>
-                            ${escapeHTML(order.id)}
-                        </strong>
-
-                        <p>
-                            ${formatPrice(order.total)}
-                        </p>
-
-                        <small>
-                            ${escapeHTML(order.status)}
-                        </small>
-                    </div>
-                `
-            )
-            .join("");
-
-    showModal(
-        "طلباتي",
-        html
-    );
-}
-
-function showSavedDesigns() {
-
-    const designs =
-        getSavedDesigns();
-
-    if (!designs.length) {
-
-        showModal(
-            "تصاميمي المحفوظة",
-            `
-                <p>
-                    ما عندك تصاميم محفوظة حالياً.
-                </p>
-
-                <button
-                    class="primary-button full-button"
-                    onclick="closeModal()"
-                >
-                    إغلاق
-                </button>
-            `
-        );
-
-        return;
-    }
-
-    const html =
-        designs
-            .map(
-                design => `
-                    <div
-                        style="
-                            padding:15px 0;
-                            border-bottom:1px solid #eee;
-                        "
-                    >
-                        <strong>
-                            ${escapeHTML(
-                                design.productType
-                            )}
-                        </strong>
-
-                        <p>
-                            ${escapeHTML(
-                                design.text ||
-                                "بدون نص"
-                            )}
-                        </p>
-                    </div>
-                `
-            )
-            .join("");
-
-    showModal(
-        "تصاميمي المحفوظة",
-        html
-    );
 }
 
 function getOrders() {
@@ -1770,7 +1857,9 @@ function getOrders() {
     }
 }
 
-/* ================= MODAL ================= */
+/* =========================================================
+   MODAL
+========================================================= */
 
 function showModal(title, content) {
 
@@ -1790,12 +1879,12 @@ function showModal(title, content) {
             position: "fixed",
             inset: "0",
             zIndex: "100000",
-            background:
-                "rgba(0,0,0,.55)",
+            background: "rgba(0,0,0,.55)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "20px"
+            padding: "20px",
+            direction: "rtl"
         }
     );
 
@@ -1808,12 +1897,12 @@ function showModal(title, content) {
                 background:#fff;
                 border-radius:22px;
                 padding:30px;
-                direction:rtl;
                 position:relative;
             "
         >
 
             <button
+                type="button"
                 onclick="closeModal()"
                 style="
                     position:absolute;
@@ -1825,29 +1914,22 @@ function showModal(title, content) {
                     background:#f1f1f1;
                     font-size:20px;
                 "
-                aria-label="إغلاق"
             >
                 ×
             </button>
 
-            <h2
-                style="
-                    margin-bottom:20px;
-                "
-            >
+            <h2>
                 ${escapeHTML(title)}
             </h2>
 
-            <div>
+            <div style="margin-top:20px;">
                 ${content}
             </div>
 
         </div>
     `;
 
-    document.body.appendChild(
-        modal
-    );
+    document.body.appendChild(modal);
 
     modal.addEventListener(
         "click",
@@ -1875,7 +1957,149 @@ function closeModal() {
     }
 }
 
-/* ================= SOCIAL ================= */
+/* =========================================================
+   ACCOUNT
+========================================================= */
+
+function showLoginMessage() {
+
+    showModal(
+        "تسجيل الدخول",
+        `
+            <p>
+                نظام الحسابات سيتم ربطه مع Supabase
+                في المرحلة التالية.
+            </p>
+
+            <button
+                type="button"
+                class="primary-button full-width"
+                onclick="closeModal()"
+            >
+                فهمت
+            </button>
+        `
+    );
+}
+
+function showOrdersMessage() {
+
+    const orders =
+        getOrders();
+
+    if (!orders.length) {
+
+        showModal(
+            "طلباتي",
+            `
+                <p>
+                    ما عندك طلبات حالياً.
+                </p>
+
+                <button
+                    type="button"
+                    class="primary-button full-width"
+                    onclick="closeModal()"
+                >
+                    إغلاق
+                </button>
+            `
+        );
+
+        return;
+    }
+
+    const content =
+        orders.map(order => `
+            <div
+                style="
+                    padding:15px 0;
+                    border-bottom:1px solid #eee;
+                "
+            >
+
+                <strong>
+                    ${escapeHTML(order.id)}
+                </strong>
+
+                <p>
+                    ${formatPrice(order.total)}
+                </p>
+
+                <small>
+                    ${escapeHTML(order.status)}
+                </small>
+
+            </div>
+        `).join("");
+
+    showModal(
+        "طلباتي",
+        content
+    );
+}
+
+function showSavedDesigns() {
+
+    const designs =
+        getSavedDesigns();
+
+    if (!designs.length) {
+
+        showModal(
+            "تصاميمي المحفوظة",
+            `
+                <p>
+                    ما عندك تصاميم محفوظة حالياً.
+                </p>
+
+                <button
+                    type="button"
+                    class="primary-button full-width"
+                    onclick="closeModal()"
+                >
+                    إغلاق
+                </button>
+            `
+        );
+
+        return;
+    }
+
+    const content =
+        designs.map(design => `
+            <div
+                style="
+                    padding:15px 0;
+                    border-bottom:1px solid #eee;
+                "
+            >
+
+                <strong>
+                    ${escapeHTML(
+                        design.productType
+                    )}
+                </strong>
+
+                <p>
+                    ${escapeHTML(
+                        design.text ||
+                        "بدون نص"
+                    )}
+                </p>
+
+            </div>
+        `).join("");
+
+    showModal(
+        "تصاميمي المحفوظة",
+        content
+    );
+}
+
+/* =========================================================
+   SOCIAL
+========================================================= */
 
 function openSocial(platform) {
 
@@ -1891,48 +2115,28 @@ function openSocial(platform) {
             "https://x.com/"
     };
 
-    const url =
-        links[platform];
-
-    if (!url) return;
+    if (!links[platform]) return;
 
     window.open(
-        url,
+        links[platform],
         "_blank",
         "noopener,noreferrer"
     );
 }
 
-/* ================= MOBILE MENU ================= */
-
-function toggleMobileMenu() {
-
-    const nav =
-        document.querySelector(
-            ".navigation"
-        ) ||
-        document.querySelector(
-            ".main-nav"
-        );
-
-    if (!nav) return;
-
-    nav.classList.toggle(
-        "mobile-open"
-    );
-}
-
-/* ================= TOAST ================= */
+/* =========================================================
+   TOAST
+========================================================= */
 
 function showToast(message) {
 
-    const existing =
+    const old =
         document.querySelector(
             ".sima-toast"
         );
 
-    if (existing) {
-        existing.remove();
+    if (old) {
+        old.remove();
     }
 
     const toast =
@@ -1952,24 +2156,20 @@ function showToast(message) {
             position: "fixed",
             bottom: "25px",
             right: "25px",
-            zIndex: "99999",
+            zIndex: "999999",
             background: "#171717",
-            color: "#ffffff",
+            color: "#fff",
             padding: "14px 20px",
             borderRadius: "12px",
             boxShadow:
                 "0 10px 30px rgba(0,0,0,.18)",
             fontSize: "14px",
             fontWeight: "700",
-            maxWidth:
-                "calc(100% - 50px)",
             direction: "rtl"
         }
     );
 
-    document.body.appendChild(
-        toast
-    );
+    document.body.appendChild(toast);
 
     setTimeout(
         () => {
@@ -1983,7 +2183,37 @@ function showToast(message) {
     );
 }
 
-/* ================= HELPERS ================= */
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function toggleMobileMenu() {
+
+    const menu =
+        document.getElementById(
+            "mobile-menu"
+        );
+
+    if (!menu) return;
+
+    menu.classList.toggle("open");
+}
+
+function closeMobileMenu() {
+
+    const menu =
+        document.getElementById(
+            "mobile-menu"
+        );
+
+    if (!menu) return;
+
+    menu.classList.remove("open");
+}
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function formatPrice(price) {
 
@@ -1997,26 +2227,11 @@ function formatPrice(price) {
 function escapeHTML(value) {
 
     return String(value ?? "")
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
 function getInputValue(id) {
@@ -2026,7 +2241,9 @@ function getInputValue(id) {
 
     if (!element) return "";
 
-    return element.value.trim();
+    return String(
+        element.value || ""
+    ).trim();
 }
 
 function getContrastColor(hex) {
@@ -2036,9 +2253,11 @@ function getContrastColor(hex) {
     }
 
     let color =
-        hex.replace("#", "");
+        String(hex)
+            .replace("#", "");
 
     if (color.length === 3) {
+
         color =
             color
                 .split("")
@@ -2080,21 +2299,36 @@ function getContrastColor(hex) {
         : "#ffffff";
 }
 
-/* ================= YEAR ================= */
+/* =========================================================
+   LOADING
+========================================================= */
 
-function updateCurrentYear() {
+function hideLoadingScreen() {
 
-    const elements =
-        document.querySelectorAll(
-            "[data-current-year]"
+    const loading =
+        document.getElementById(
+            "loading-screen"
         );
 
-    elements.forEach(
-        element => {
-            element.textContent =
-                new Date().getFullYear();
-        }
+    if (!loading) return;
+
+    loading.classList.add("loaded");
+
+    setTimeout(
+        () => {
+            if (loading) {
+                loading.remove();
+            }
+        },
+        500
     );
+}
+
+/* =========================================================
+   YEAR
+========================================================= */
+
+function updateCurrentYear() {
 
     const year =
         document.getElementById(
@@ -2107,81 +2341,54 @@ function updateCurrentYear() {
     }
 }
 
-/* ================= LOADING ================= */
+/* =========================================================
+   INITIALIZATION
+========================================================= */
 
-function hideLoadingScreen() {
-
-    const loading =
-        document.getElementById(
-            "loading-screen"
-        );
-
-    if (!loading) return;
-
-    loading.style.opacity =
-        "0";
-
-    loading.style.pointerEvents =
-        "none";
-
-    setTimeout(
-        () => {
-            loading.remove();
-        },
-        400
-    );
-}
-
-/* ================= DESIGNER RESET ================= */
-
-function resetDesigner() {
-
-    designerState = {
-
-        productType:
-            "تيشيرت",
-
-        color:
-            "#f5f5f5",
-
-        size:
-            "M",
-
-        text:
-            "",
-
-        textSize:
-            28,
-
-        uploadedImage:
-            null
-    };
+function initializeSima() {
 
     try {
-        localStorage.removeItem(
-            "sima_designer"
-        );
-    } catch (error) {}
 
-    const input =
-        document.getElementById(
-            "custom-text"
+        loadCart();
+
+        loadDesignerState();
+
+        updateCartCount();
+
+        renderFeaturedProducts();
+
+        renderShopProducts();
+
+        renderCart();
+
+        renderCheckout();
+
+        updateCurrentYear();
+
+        updateDesignerPreview();
+
+        hideLoadingScreen();
+
+        showPage("home");
+
+        console.log(
+            "SIMA 3.0 initialized successfully."
         );
 
-    if (input) {
-        input.value = "";
+    } catch (error) {
+
+        console.error(
+            "SIMA initialization error:",
+            error
+        );
+
+        hideLoadingScreen();
     }
-
-    removeUploadedDesign();
-
-    updateDesignerPreview();
-
-    showToast(
-        "تم إعادة التصميم للوضع الأساسي"
-    );
 }
 
-/* ================= KEYBOARD ================= */
+/* =========================================================
+   KEYBOARD
+========================================================= */
 
 document.addEventListener(
     "keydown",
@@ -2196,40 +2403,9 @@ document.addEventListener(
     }
 );
 
-/* ================= INITIALIZATION ================= */
-
-function initializeSima() {
-
-    loadCart();
-
-    loadDesignerState();
-
-    updateCartCount();
-
-    renderFeaturedProducts();
-
-    renderShopProducts();
-
-    renderCart();
-
-    renderCheckout();
-
-    updateCurrentYear();
-
-    setupCategoryButtons();
-
-    updateDesignerPreview();
-
-    hideLoadingScreen();
-
-    showPage("home");
-
-    console.log(
-        "SIMA 3.0 initialized successfully."
-    );
-}
-
-/* ================= DOM READY ================= */
+/* =========================================================
+   DOM READY
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
